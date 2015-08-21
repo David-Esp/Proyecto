@@ -33,11 +33,13 @@ import java.util.logging.Logger;
  * @author rodrigo19x
  */
 public class Instance {
-    private String name;
-    private int vehicle_number;
-    private int capacity;
-    private Map<Integer,Vehicle> General_Vehicle;
-    private Map<Integer,Customer> General_Customer;
+    //En esta clase se declararon variables constantes del problema
+    //No se deben utilizar estos datos para generar la solución, ya que se evita leer el archivo.
+    private String name; //Nombre del archivo
+    private int vehicle_number; //Numero de vehiculos de la instancia
+    private int capacity; //Capacidad
+    private Map<Integer,Vehicle> General_Vehicle; //Mapa de vehiculos
+    private Map<Integer,Customer> General_Customer; //Mapa de clientes
 
     public Map<Integer, Vehicle> getGeneral_Vehicle() {
         return General_Vehicle;
@@ -138,6 +140,8 @@ public class Instance {
                     Ins.setX_coord(xcoord);
                     Ins.setY_coord(ycoord);
                     Ins.setServices(service);
+                    Ins.setVehicle_arrived(0);
+                    Ins.setCapacity_arrived(0);
                     /******************************************************/
                     this.General_Customer.put(number, Ins);
                 }

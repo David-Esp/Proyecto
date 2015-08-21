@@ -10,9 +10,10 @@ package DataStructure;
  * @author rodrigo19x
  */
 public class Vehicle {
+    
     private int id;
-    private int capacity;
-    private double time_service;
+    private int capacity; //Capacidad con la que se encuentra el vehiculo
+    private double time_service; //Tiempo total de servicio del vehiculo
     private double x;
     private double y;
     

@@ -126,6 +126,9 @@ public class WTDH {
                     System.out.println("Test123 " + distance_Final);
                     problem.setTimeDistance(distance_Final+problem.getTimeDistance() - V.getTime_service());//Se actualiza tiempo global del problema.
                     System.out.println("Test13 " +problem.getTimeDistance());
+                    
+                    double time_arrived_vehicle=V.getTime_service();
+                    int capacity_arrived_vehicle=V.getCapacity();
                     //Las siguientes secciones de códuigo actualizan al vehiculo en uso
                     problem.getUsing_Vehicle().get(V.getId()).setCapacity(V.getCapacity()-C.Cus.getDemand());//Se resta la capacidad al vehiculo.
                     problem.getUsing_Vehicle().get(V.getId()).setX(C.Cus.getX_coord());//Se actualiza la coordenada X para llegar al nuevo cliente.
@@ -136,6 +139,8 @@ public class WTDH {
                     //Se debe actualizar el cliente para que no sea visitado
                     problem.getUsing_Customer().get(C.Cus.getId()).setDemand(0); //Demanda 0
                     problem.getUsing_Customer().get(C.Cus.getId()).setServices(0);//Tiempo de servicio 0
+                    problem.getUsing_Customer().get(C.Cus.getId()).setCapacity_arrived(capacity_arrived_vehicle);
+                    problem.getUsing_Customer().get(C.Cus.getId()).setVehicle_arrived(time_arrived_vehicle);
                      
                    
                     problem.getRoutes().get(V.getId()-1).add(C.Cus.getId()); //Se agrega el cliente a la ruta

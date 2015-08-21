@@ -25,6 +25,7 @@ package DataStructure;
  * @author rodrigo19x
  */
 public class Customer {
+    //Datos estandar
     private int id;
     private double x_coord;
     private double y_coord;
@@ -32,7 +33,26 @@ public class Customer {
     private int ready_time;
     private int due_time;
     private int services;
-    
+    //Variables con las que llegó el vehiculo 
+    private double vehicle_arrived; //Tiempo de servicio del chofer
+    private int capacity_arrived; //Capacidad con la que llega el vehiculo
+
+    public int getCapacity_arrived() {
+        return capacity_arrived;
+    }
+
+    public void setCapacity_arrived(int capacity_arrived) {
+        this.capacity_arrived = capacity_arrived;
+    }
+
+    public double getVehicle_arrived() {
+        return vehicle_arrived;
+    }
+
+    public void setVehicle_arrived(double vehicle_arrived) {
+        this.vehicle_arrived = vehicle_arrived;
+    }
+
     public int getId() {
         return id;
     }

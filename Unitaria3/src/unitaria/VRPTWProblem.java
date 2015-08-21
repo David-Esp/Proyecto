@@ -17,15 +17,14 @@ import java.util.Map;
  * @author rodrigo19x
  */
 public class VRPTWProblem {
-    
-    private int NumberVehicle;
-    private double TimeDistance;
-    private int LastVehicle;
-    private double actual_time;
-    private Map<Integer,Vehicle> Using_Vehicle;
-    private Map<Integer,Customer> Using_Customer;
-    private List<List<Integer>> Routes;
-    private Instance Inst; 
+    //Las siguientes variables van almacenando la información a medida que genera la solución.
+    private int NumberVehicle; //Cantidad de vehiculos ocupados
+    private double TimeDistance; //Tiempo Total
+    private int LastVehicle; //Último vehiculo utilizado
+    private Map<Integer,Vehicle> Using_Vehicle; //Mapa de vehiculos que se han utilizado en la solución
+    private Map<Integer,Customer> Using_Customer; // Mapa de clientes que se han utilizado en la solución.
+    private List<List<Integer>> Routes; //Matriz de ruta (Ojo, el indice 0 es equivalente a la ruta del vehiculo 1)
+    private Instance Inst; // Datos de pila (este objeto se puede utilizar en caso de querer resetear alguna estructura del problema)
     
     public void view_dates(){
         System.out.println("Numero de  Vehiculos: " + this.NumberVehicle);
@@ -65,13 +64,7 @@ public class VRPTWProblem {
         System.out.println("------------------------------------------------");
     }
     
-    public double getActual_time(){
-        return actual_time;
-    }
 
-    public void setActual_time(double actual_time) {
-        this.actual_time = actual_time;
-    }
     
     public Map<Integer, Vehicle> getUsing_Vehicle() {
         return Using_Vehicle;
@@ -130,8 +123,6 @@ public class VRPTWProblem {
     }
     
     public VRPTWProblem(String name_file){
-        
-        
         this.TimeDistance=0; 
         this.Inst= new Instance(name_file);
         this.NumberVehicle=this.Inst.getVehicle_number();

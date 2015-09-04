@@ -109,7 +109,7 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
             customers = new ArrayList<>(result.length);
                
             depot = new Customer(result[9]);
-         for (int x=10; x<(result.length -1); x++)
+         for (int x=10; x<(result.length ); x++)
             {
             customer = new Customer(result[x]);
             //System.out.println(result[x]);

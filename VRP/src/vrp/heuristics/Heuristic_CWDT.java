@@ -172,7 +172,7 @@ public class Heuristic_CWDT extends VRPHeuristic{
                 lastRoute.insertCustomer(candidateCustomer);
                 //Se agrega el arco creado a la lista de arcos
                 edges.add(edge);
-               ed.add(edge);
+                ed.add(edge);
                 //Se actualiza la distancia recorrida (distancia + tiempo de servicio) 
                 //Esta faltando el tiempo de espera (si es que hay)
                 distanciaRecorrida = distanciaRecorrida + edge.getDistance() + edge.getWaitingTime()  + edge.getCustomer2().getServiceTime();

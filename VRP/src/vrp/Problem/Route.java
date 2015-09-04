@@ -113,6 +113,7 @@ public class Route {
             distancia += getDistanceFromTo(edge.getCustomer1(), edge.getCustomer2());
             
         }
+        distance = distancia;
         return distancia;
     }
     
@@ -189,7 +190,8 @@ public class Route {
 //        }
 //          distance = distance + getDistanceFromTo(customerOrigin, customerDeposit);
 //         
-        return distance;
+        //computeDistance();
+         return distance;
     }
      
     private double getDistanceFromTo(Customer customerOrigin, Customer customerDestiny){

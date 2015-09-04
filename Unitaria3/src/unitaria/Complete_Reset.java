@@ -13,6 +13,8 @@ import java.util.List;
  * @author rodrigo19x
  */
 public class Complete_Reset {
+    
+    
         public int getNextElement(VRPTWProblem problem) {
         int randomNum = problem.getRoutes().size() ;
         

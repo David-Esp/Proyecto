@@ -123,9 +123,9 @@ public class WTDH {
                     else{ //Caso contrario, se debe calcular el tiempo de espera (la sentencia se encuentra en el abs)
                         distance_Final=C.Cus.getServices()+C.distance+Math.abs(V.getTime_service() - C.Cus.getReady_time()) + V.getTime_service();
                     }
-                    System.out.println("Test123 " + distance_Final);
+                  //  System.out.println("Test123 " + distance_Final);
                     problem.setTimeDistance(distance_Final+problem.getTimeDistance() - V.getTime_service());//Se actualiza tiempo global del problema.
-                    System.out.println("Test13 " +problem.getTimeDistance());
+                  //  System.out.println("Test13 " +problem.getTimeDistance());
                     
                     double time_arrived_vehicle=V.getTime_service();
                     int capacity_arrived_vehicle=V.getCapacity();

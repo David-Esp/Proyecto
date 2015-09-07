@@ -69,6 +69,8 @@ public class Route {
          customers.add(index, customer);
           
          vehicleCapacity = vehicleCapacity - (int) customer.getDemand();
+         demand = demand + (int) customer.getDemand();
+         distance  = computeDistance();
          return true;   
     }
     
@@ -214,6 +216,15 @@ public class Route {
     
     public void setDistance(double distance) {
         this.distance = distance;
+        
+    }
+    
+    public void setVehicleCapacity( int capacity){
+        this.vehicleCapacity = capacity;
+    }
+    
+    public void setDemand(double demand){
+        this.demand = demand;
         
     }
 

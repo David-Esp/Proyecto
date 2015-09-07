@@ -25,55 +25,24 @@ public class Unitaria {
        //V.getInst().View();
        //V.view_dates();
        WTDH D = new WTDH();
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       D.getNextElement(V);
-       
+        while ( D.getNextElement(V) == 1){
+        D.getNextElement(V);
+       }
+        
+         
+//        Parcial_Reset P = new Parcial_Reset();
+//            P.getNextElement(V);
+           
+            
+        Complete_Reset C = new Complete_Reset();
+            C.getNextElement(V);
+            
+       /*
+        
+        TwoOptMod T = new TwoOptMod();
+         T.getNextElement(V);
+        */ 
+        
        V.view_dates();
        
     }

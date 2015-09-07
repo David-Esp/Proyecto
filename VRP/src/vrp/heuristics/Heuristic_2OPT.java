@@ -92,14 +92,14 @@ public class Heuristic_2OPT extends VRPHeuristic{
               double wtj;
               double wtk;
               int casos = 0;
-              if((eoSCustomerJ_1 + distanceJK_after) > customerK_2.getTimeWindowStart()){
+              if((eoSCustomerJ_1 + distanceJK_after) < customerK_2.getTimeWindowStart()){
                   wtj = customerK_2.getTimeWindowStart() - (eoSCustomerJ_1 + distanceJK_after);
                   casos = 1;
               }else{
                   wtj = 0;
               }
               
-              if((eoSCustomerK_1 + distanceKJ_after)  > customerJ_2.getTimeWindowStart()){
+              if((eoSCustomerK_1 + distanceKJ_after)  < customerJ_2.getTimeWindowStart()){
                   wtk = customerJ_2.getTimeWindowStart() - (eoSCustomerK_1 + distanceKJ_after) ;
                   casos += 2;
               }else{
@@ -109,13 +109,13 @@ public class Heuristic_2OPT extends VRPHeuristic{
               //Pasamos a revisar cada ruta, si tienen un tiempo de espera mayor a cero, no hay problema de que se descomponga la ruta despues
              
               
-              if(wtj>0){
+              if(wtj == 0){
               //--------------------------------------------------
               //-----------Ruta J---------------------------------
               //--------------------------------------------------
                 //En esta ruta revisamos los arcos de K desde el arco que se desharia en delante
                 revisionRutaJ: //Etiqueta para luego salir del loop
-                for(int temJ = j + 1; temJ < edgesK.size() ; temJ++){
+                for(int temJ = k + 1; temJ < edgesK.size() ; temJ++){
                     Edge newEdgeJ = edgesK.get(temJ);
                     double newEOS1 = (eoSCustomerJ_1 + distanceJK_after) + wtj + newEdgeJ.getCustomer1().getServiceTime();
                     if(newEOS1 + newEdgeJ.getDistance() > newEdgeJ.getCustomer2().getTimeWindowEnd()){
@@ -138,13 +138,13 @@ public class Heuristic_2OPT extends VRPHeuristic{
               }
   
               
-              if(wtk>0){
+              if(wtk == 0){
                  //--------------------------------------------------
                  //-----------Ruta K---------------------------------
                  //--------------------------------------------------
                 //En esta ruta revisamos los arcos de J desde el arco que se desharia en delante
                 revisionRutaK: //Etiqueta para luego salir del loop
-                for(int temK = k + 1; temK < edgesJ.size() ; temK++){
+                for(int temK = j + 1; temK < edgesJ.size() ; temK++){
                     Edge newEdgeK = edgesJ.get(temK);
                     double newEOS1 = (eoSCustomerK_1 + distanceKJ_after) + wtk + newEdgeK.getCustomer1().getServiceTime();
                     if(newEOS1 + newEdgeK.getDistance() > newEdgeK.getCustomer2().getTimeWindowEnd()){
@@ -241,7 +241,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
                                     selRutaK = routeK;
                                     selIndexEdgeK = k;
                                     //Guardamos los datos de las rutas y los arcos con mayor ahorro de ruta :) 
-                                    System.out.println("Wooo o " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
+                                    //System.out.println("Wooo o " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
             
                                 
                             }
@@ -308,14 +308,14 @@ public class Heuristic_2OPT extends VRPHeuristic{
             
              double wtj;
               double wtk; 
-              if((listaArcosJ.get(selIndexEdgeJ).getEndOfServiceCustomer1() + distanceJK_after) > customerK_2.getTimeWindowStart()){
+              if((listaArcosJ.get(selIndexEdgeJ).getEndOfServiceCustomer1() + distanceJK_after) < customerK_2.getTimeWindowStart()){
                   wtj = customerK_2.getTimeWindowStart() - (listaArcosJ.get(selIndexEdgeJ).getEndOfServiceCustomer1() + distanceJK_after);
                    
               }else{
                   wtj = 0;
               }
               
-              if((listaArcosK.get(selIndexEdgeK).getEndOfServiceCustomer1() + distanceKJ_after)  > customerJ_2.getTimeWindowStart()){
+              if((listaArcosK.get(selIndexEdgeK).getEndOfServiceCustomer1() + distanceKJ_after) < customerJ_2.getTimeWindowStart()){
                   wtk = customerJ_2.getTimeWindowStart() - (listaArcosK.get(selIndexEdgeK).getEndOfServiceCustomer1() + distanceKJ_after) ;
               
               }else{
@@ -337,21 +337,41 @@ public class Heuristic_2OPT extends VRPHeuristic{
             tempRouteK.setDistance(distanceK);
             
             //Incertamos a la ruta J la cola de la ruta K
+            double newEoSJK = newEdgeJ.getEndOfServiceCustomer1() + wtj + newEdgeJ.getDistance() + newEdgeJ.getCustomer2().getServiceTime();
             for(int xy = selIndexEdgeK + 1; xy < listaArcosK.size(); xy++){
                 tempRouteJ.insertCustomer(listaArcosK.get(xy).getCustomer2());
-                Edge newEdgeJK = listaArcosK.get(xy);
-                tempEdgesJ.add(newEdgeJK);
-                distanceJ += newEdgeJK.getDistance() + newEdgeJK.getWaitingTime()  + newEdgeJK.getCustomer2().getServiceTime(); 
+               // Edge newEdgeJK = listaArcosK.get(xy);
+                
+                               if((newEoSJK+ listaArcosK.get(xy).getDistance()) < listaArcosK.get(xy).getCustomer2().getTimeWindowStart()){
+                                    wtk = listaArcosK.get(xy).getCustomer2().getTimeWindowStart() - (newEoSJK+ listaArcosK.get(xy).getDistance()) ;
+
+                                }else{
+                                    wtk = 0;
+                                }
+                Edge someNewEdgeJK = new Edge(listaArcosK.get(xy).getCustomer1(), listaArcosK.get(xy).getCustomer2(), listaArcosK.get(xy).getRoute(), listaArcosK.get(xy).getDemand(), listaArcosK.get(xy).getDistance(), newEoSJK, wtj);
+                newEoSJK = someNewEdgeJK.getDistance() + someNewEdgeJK.getEndOfServiceCustomer1() + wtj + someNewEdgeJK.getCustomer2().getServiceTime();
+                
+                tempEdgesJ.add(someNewEdgeJK);
+                distanceJ += someNewEdgeJK.getDistance() + someNewEdgeJK.getWaitingTime()  + someNewEdgeJK.getCustomer2().getServiceTime(); 
                 tempRouteJ.setDistance(distanceJ);
                 
             } 
             
             //Inertamos a la ruta K la cola de la anterior ruta J 
+            double newEoSKJ = newEdgeK.getEndOfServiceCustomer1() + wtk + newEdgeK.getDistance() + newEdgeK.getCustomer2().getServiceTime();
             for(int xy = selIndexEdgeJ + 1; xy < listaArcosJ.size(); xy++){
                 tempRouteK.insertCustomer(listaArcosJ.get(xy).getCustomer2());
-                Edge newEdgeKJ = listaArcosJ.get(xy);
-                tempEdgesK.add(newEdgeKJ);
-                distanceK += newEdgeKJ.getDistance() + newEdgeKJ.getWaitingTime()  + newEdgeKJ.getCustomer2().getServiceTime(); 
+               // Edge newEdgeKJ = listaArcosJ.get(xy);
+                              if((newEoSKJ+ listaArcosJ.get(xy).getDistance()) < listaArcosJ.get(xy).getCustomer2().getTimeWindowStart()){
+                                    wtk = listaArcosJ.get(xy).getCustomer2().getTimeWindowStart() - (newEoSKJ+ listaArcosJ.get(xy).getDistance()) ;
+
+                                }else{
+                                    wtk = 0;
+                                }
+                Edge someNewEdgeKJ = new Edge(listaArcosJ.get(xy).getCustomer1(), listaArcosJ.get(xy).getCustomer2(), listaArcosJ.get(xy).getRoute(), listaArcosJ.get(xy).getDemand(), listaArcosJ.get(xy).getDistance(), newEoSKJ, wtk);
+                newEoSKJ = someNewEdgeKJ.getDistance() + someNewEdgeKJ.getEndOfServiceCustomer1() + wtk + someNewEdgeKJ.getCustomer2().getServiceTime();
+                tempEdgesK.add(someNewEdgeKJ);
+                distanceK += someNewEdgeKJ.getDistance() + someNewEdgeKJ.getWaitingTime()  + someNewEdgeKJ.getCustomer2().getServiceTime(); 
                 tempRouteK.setDistance(distanceJ);
                 
             }
@@ -363,10 +383,10 @@ public class Heuristic_2OPT extends VRPHeuristic{
             problem.getRoutes().add(tempRouteK);
             
             
-            System.out.println("Temporales  " + tempRouteJ + " temporal K " + tempRouteK);
+          //  System.out.println("Temporales  " + tempRouteJ + " temporal K " + tempRouteK);
             
-            System.out.println("WooooooWwowowowoooooooooooooooo " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
-            System.out.println("se realizo un cambio");
+           // System.out.println("WooooooWwowowowoooooooooooooooo " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
+            System.out.println("se realizo un cambio 2 OPT");
             return 1;
        }else{
            System.out.println("Ningun cambio posible");

@@ -233,7 +233,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
                             
                             if( feasibleToDo(routeJ,j, routeK, k) ){
                                 //En caso de que sea posible, guardamos que arcos son los que se pueden cambiar y el ahorro que nos daria (para despues hacer el mejor cambio posible
-                                System.out.println("s-ss-s-s");
+                               // System.out.println("s-ss-s-s");
                                     
                                     savings = candSavings;
                                     selRutaJ = routeJ ;
@@ -343,10 +343,10 @@ public class Heuristic_2OPT extends VRPHeuristic{
                // Edge newEdgeJK = listaArcosK.get(xy);
                 
                                if((newEoSJK+ listaArcosK.get(xy).getDistance()) < listaArcosK.get(xy).getCustomer2().getTimeWindowStart()){
-                                    wtk = listaArcosK.get(xy).getCustomer2().getTimeWindowStart() - (newEoSJK+ listaArcosK.get(xy).getDistance()) ;
+                                    wtj = listaArcosK.get(xy).getCustomer2().getTimeWindowStart() - (newEoSJK+ listaArcosK.get(xy).getDistance()) ;
 
                                 }else{
-                                    wtk = 0;
+                                    wtj = 0;
                                 }
                 Edge someNewEdgeJK = new Edge(listaArcosK.get(xy).getCustomer1(), listaArcosK.get(xy).getCustomer2(), listaArcosK.get(xy).getRoute(), listaArcosK.get(xy).getDemand(), listaArcosK.get(xy).getDistance(), newEoSJK, wtj);
                 newEoSJK = someNewEdgeJK.getDistance() + someNewEdgeJK.getEndOfServiceCustomer1() + wtj + someNewEdgeJK.getCustomer2().getServiceTime();
@@ -379,17 +379,22 @@ public class Heuristic_2OPT extends VRPHeuristic{
             problem.getRoutes().remove(selRutaJ);
             problem.getRoutes().remove(selRutaK);
             
+            
+            
+            if(tempRouteJ.getEdges().size() > 1)
             problem.getRoutes().add(tempRouteJ);
+            
+            if(tempRouteK.getEdges().size() > 1)
             problem.getRoutes().add(tempRouteK);
             
             
           //  System.out.println("Temporales  " + tempRouteJ + " temporal K " + tempRouteK);
             
            // System.out.println("WooooooWwowowowoooooooooooooooo " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
-            System.out.println("se realizo un cambio 2 OPT");
+          //  System.out.println("se realizo un cambio 2 OPT");
             return 1;
        }else{
-           System.out.println("Ningun cambio posible");
+          // System.out.println("Ningun cambio posible");
             return 0;
        }
         

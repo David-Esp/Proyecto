@@ -265,7 +265,8 @@ public class Heuristic_I1 extends VRPHeuristic{
                         List<Edge> x = lastRoute.getEdges();
                         
                         
-                        if(checkFeasibility2(x, countE, customer))
+                        //if(checkFeasibility2(x, countE, customer))
+                        if(esPosible(lastRoute, countE, customer))    
                         {c12 = bju - bj;
                         }else
                         {c12 = 9999999;   
@@ -470,6 +471,86 @@ public class Heuristic_I1 extends VRPHeuristic{
       }
      
   }
+  
+    private boolean esPosible(Route rutaJ, int j, Customer customerCan){
+         
+        
+          //Si la capacidad total del vehiculo es excedida por alguna de las nuevas rutas, no es factible hacer el cambio
+          if(rutaJ.getVehicleCapacity() < customerCan.getDemand()){
+            return false;
+          }
+        
+       
+          List<Edge> edgesJ = rutaJ.getEdges(); 
+          Edge sEdgeJ = edgesJ.get(j); 
+          
+          Customer customerJ_1 = sEdgeJ.getCustomer1();
+          Customer customerJ_2 = sEdgeJ.getCustomer2(); 
+          
+          double distanceJK_after = getDistanceFromTo(customerJ_1, customerCan);
+          double distanceKJ_after = getDistanceFromTo(customerCan, customerJ_2);
+          
+          
+          double eoSCustomerJ_1 = sEdgeJ.getEndOfServiceCustomer1(); 
+          
+          if(eoSCustomerJ_1 + distanceJK_after > customerCan.getTimeWindowEnd()){
+              return false;
+          } 
+          else{
+              //En caso de que se pueda llegar a tiempo en ambas rutas, se procede a hacer una revision de cada una, 
+              double wtj; 
+              
+              if((eoSCustomerJ_1 + distanceJK_after) < customerCan.getTimeWindowStart()){
+                  wtj = customerCan.getTimeWindowStart() - (eoSCustomerJ_1 + distanceJK_after);
+                   
+              }else{
+                  wtj = 0;
+              }
+              
+               double eoSCustomerJ_2 = eoSCustomerJ_1 + distanceJK_after + wtj + customerCan.getServiceTime();
+               double wtk = 0;
+               
+               if(eoSCustomerJ_2 + distanceKJ_after > customerJ_2.getTimeWindowEnd()){
+                 return false;
+               } 
+                
+               if((eoSCustomerJ_2 + distanceKJ_after) < customerJ_2.getTimeWindowStart()){
+                 wtk = customerJ_2.getTimeWindowStart() - (eoSCustomerJ_2 + distanceKJ_after);
+               }else{
+                 wtk = 0;
+                }
+  
+              if(wtk == 0){
+              //--------------------------------------------------
+              //-----------Ruta J---------------------------------
+              //--------------------------------------------------
+                //En esta ruta revisamos los arcos de K desde el arco que se desharia en delante
+                revisionRutaK: //Etiqueta para luego salir del loop
+                for(int temK = j + 1; temK < edgesJ.size() ; temK++){ //Aqui va bien
+                    Edge newEdgeK = edgesJ.get(temK);
+                    double newEOS1 = (eoSCustomerJ_2 + distanceKJ_after) + wtk + newEdgeK.getCustomer1().getServiceTime();
+                    if(newEOS1 + newEdgeK.getDistance() > newEdgeK.getCustomer2().getTimeWindowEnd()){
+                        //*********************************** En caso de que alguna ventana de tiempo se viole
+                        return false;
+                    }else{
+                        if(newEdgeK.getCustomer2().getTimeWindowStart() > newEOS1 + newEdgeK.getDistance()){
+                            wtk = newEdgeK.getCustomer2().getTimeWindowStart()  - (newEOS1 + newEdgeK.getDistance());
+                            break revisionRutaK;
+                        }else{
+                            wtk = 0;
+                        }
+                        
+                        eoSCustomerJ_2 = newEOS1;
+                        distanceKJ_after = newEdgeK.getDistance();
+
+                    }
+                }
+              
+              }
+            } 
+        return true;
+ 
+      }
   
   private List<Edge> arreglarArcos(List<Edge> ed, int index){
       List<Edge> edges = ed;

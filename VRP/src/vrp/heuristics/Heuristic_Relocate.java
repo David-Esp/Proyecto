@@ -180,7 +180,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
                                      routeK_rel = rutaB;
                                      indexCustomerK_rel = xc2 ;
                                      
-                                     System.out.println("Es factible 222" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
+                                    // System.out.println("Es factible 222" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
                                         esPosible(rutaA, xe, customerCan);
                                 }
                                 //Entonces se guardan todos los parametros para hacer el cambio despues 
@@ -223,7 +223,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
                                      routeK_rel = rutaA;
                                      indexCustomerK_rel = xc ;
                                      
-                                     System.out.println("Es factible 221" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
+                                    // System.out.println("Es factible 221" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
                                      esPosible(rutaB, xe, customerCan);
                                 }
                                 //Entonces se guardan todos los parametros para hacer el cambio despues 
@@ -347,10 +347,10 @@ public class Heuristic_Relocate extends VRPHeuristic {
               newEosCK = newEosCK + newWtK + someE.getDistance() + someE.getCustomer2().getServiceTime();
            }        
            
-            System.out.println("doneChange");
+            //System.out.println("doneChange");
             return 1;
        }else{
-           System.out.println("Ningun cambio posible");
+          // System.out.println("Ningun cambio posible");
             return 0;
        }
    

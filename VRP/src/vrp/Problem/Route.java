@@ -162,37 +162,6 @@ public class Route {
     // ------------------ Getters
     
      public double getDistance() {
-//        distance = 0;
-//        
-//         
-//        ListIterator<Customer> iterator; 
-//         
-//        Customer customerOrigin = null,customerDestiny = null, customerDeposit  = null;
-//        
-//                
-//        /*
-//         * We add the customers
-//         */
-//        iterator = customers.listIterator();
-//        while (iterator.hasNext()) {
-//            if(customerOrigin == (null)){
-//                customerDeposit =   iterator.next();
-//                 customerDestiny = customerDeposit;
-//                 customerOrigin = customerDeposit;
-//                 
-//         }else{
-//                customerDestiny = iterator.next();
-//                distance = distance + getDistanceFromTo(customerOrigin, customerDestiny);
-//                customerOrigin = customerDestiny;
-//            }
-//            
-//            
-//            
-//            
-//        }
-//          distance = distance + getDistanceFromTo(customerOrigin, customerDeposit);
-//         
-        //computeDistance();
          return distance;
     }
      

@@ -5,15 +5,21 @@
  */
 package vrp;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import vrp.Problem.VehicleRoutingProblem;
 import vrp.Solvers.Problem_Analizer;
 import vrp.Solvers.Solution_Tester;
 import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_CWDT;
-import vrp.heuristics.Heuristic_CompleteReset;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
-import vrp.heuristics.Heuristic_PartialReset;
 import vrp.heuristics.Heuristic_Relocate;
 
 /**
@@ -37,15 +43,43 @@ he command line arguments
         
         VehicleRoutingProblem problem,problem2, problem3;
  
-        
-       problem = new VehicleRoutingProblem("Instances/solomon_100/C203.txt"); 
-       
+  
+       problem = new VehicleRoutingProblem("Instances/solomon_100/R101.txt"); 
        Heuristic_NNH d =  new Heuristic_NNH();
-       while ( d.getNextElement(problem) == 1)
-       {
-        d.getNextElement(problem);
+       Heuristic_I1 i1 = new Heuristic_I1();
+            Solution_Tester sol = new Solution_Tester();
+       Problem_Analizer pAnal = new Problem_Analizer();
+       
+       
+       while ( i1.getNextElement(problem) == 1){}
+       System.out.println(problem.toString());
+       System.out.println(pAnal.solution(problem));
+       
+             
+       if(sol.solution(problem)) {
+         System.out.println(problem.toString());
+       
+           System.out.println(pAnal.solution(problem));
+       
        }
-        
+       else
+            System.out.println("Mala Solucion 1");
+       
+       while (opt.getNextElement(problem) == 1 ){}
+       System.out.println(pAnal.solution(problem));
+       System.out.println(problem.toString());
+  
+      
+       if(sol.solution(problem)) {
+         System.out.println(problem.toString());
+       
+           System.out.println(pAnal.solution(problem));
+       
+       }
+       else
+            System.out.println("Mala Solucion");
+       
+       /*
        problem2 = new VehicleRoutingProblem("Instances/solomon_100/C101.txt"); 
        
        Heuristic_CWDT x =  new Heuristic_CWDT();
@@ -63,8 +97,9 @@ he command line arguments
         y.getNextElement(problem3);
        }
        
+       */
        
-       Solution_Tester sol = new Solution_Tester();
+       
        
        //-------------------------
        //Test del partial reset
@@ -102,17 +137,10 @@ he command line arguments
         
         */
         
-        Problem_Analizer pAnal = new Problem_Analizer();
-      
-       if(sol.solution(problem)) {
-         System.out.println(problem.toString());
-       
-           System.out.println(pAnal.solution(problem));
-       
-       }
-       else
-            System.out.println("Mala Solucion");
+        
    
+       
+       /*
      //----------------------------------
      //-----Prueba del Relocate
      //----------------------------------
@@ -136,7 +164,7 @@ he command line arguments
             System.out.println("Mala Solucion");
        
        
-       
+       */
            
  /* -------------Prueba del 2OPT!!!!______________
    //-----------------------------------------
@@ -144,7 +172,7 @@ he command line arguments
    //    ------------------------------------
        
          
-    */        
+           
        Heuristic_2OPT opt2 = new Heuristic_2OPT();
        
        
@@ -161,44 +189,8 @@ he command line arguments
        else
             System.out.println("Mala Solucion");
      
-     
-     
-      /*   
-       
-       if(sol.solution(problem2)) 
-         //System.out.println(problem2.toString());
-       else
-            System.out.println("Mala Solucion");
-       
-       
-        while ( relocate.getNextElement(problem2) == 1)
-       {
-        relocate.getNextElement(problem2);
-       }
-       
-       
-       if(sol.solution(problem3)) 
-         System.out.println(problem3.toString());
-       else
-         System.out.println("Mala Solucion"); 
-       
-       */
-         //System.out.println(problem3.toString());
-         
-       /* 
-       while ( relocate.getNextElement(problem3) == 1)
-       {
-        relocate.getNextElement(problem3);
-       }
-       
       
-       while ( opt.getNextElement(problem3) == 1)
-       {
-        opt.getNextElement(problem3);
-       }
-       */
-       
-       
+      */  
     }
     
     

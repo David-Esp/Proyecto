@@ -1,0 +1,20 @@
+<!--=============================================
+Feel free to add any comments in this section
+=============================================
+-->
+<vector-heuristic-selector>
+	<features>
+		<feature name="DIF"/>
+	</features>
+	<heuristics>
+		<heuristic name="2OPT"/>
+		<heuristic name="REL"/>
+	</heuristics>
+	<rules nbRules="5">
+		<rule condition="0.77246" action="1"/>
+		<rule condition="0.57246" action="0"/>
+		<rule condition="0.13848" action="1"/>
+		<rule condition="0.43730" action="0"/>
+		<rule condition="0.42207" action="0"/>
+	</rules>
+</vector-heuristic-selector>

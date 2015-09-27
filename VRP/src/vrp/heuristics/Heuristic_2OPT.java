@@ -18,7 +18,12 @@ import vrp.Problem.VehicleRoutingProblem;
  * @author David
  */
 public class Heuristic_2OPT extends VRPHeuristic{
-    
+ 
+    /**
+     *
+     */
+    public Heuristic_2OPT() {
+    }
     
       private double haveSavings(Edge edgeJ, Edge edgeK){
           Customer customerJ_1 = edgeJ.getCustomer1();
@@ -382,10 +387,10 @@ public class Heuristic_2OPT extends VRPHeuristic{
             
             
             if(tempRouteJ.getEdges().size() > 1)
-            problem.getRoutes().add(tempRouteJ);
+                problem.getRoutes().add(tempRouteJ);
             
             if(tempRouteK.getEdges().size() > 1)
-            problem.getRoutes().add(tempRouteK);
+                problem.getRoutes().add(tempRouteK);
             
             
           //  System.out.println("Temporales  " + tempRouteJ + " temporal K " + tempRouteK);
@@ -403,7 +408,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
 
     @Override
     public String toString() {
-        return "2-OPT*";
+        return "2OPT";
         
     }
     
@@ -490,5 +495,5 @@ public class Heuristic_2OPT extends VRPHeuristic{
      
   }
    
-    
+ 
 }

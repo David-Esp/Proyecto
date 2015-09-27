@@ -9,14 +9,17 @@ import RaHHD.Exceptions.NoSuchFeatureException;
 import RaHHD.Exceptions.NoSuchHeuristicException;
 import RaHHD.FeatureManager;
 import RaHHD.HeuristicManager;
+import RaHHD.HeuristicSelector;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_CWDT;
+import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
+import vrp.heuristics.Heuristic_Relocate;
 import vrp.heuristics.VRPHeuristic;
-
 
 /**
  *
@@ -24,48 +27,17 @@ import vrp.heuristics.VRPHeuristic;
  */
 public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
 
-    
-    @Override
-    /**
-     * NOTE: Features need to be normalized in the range [0, 1].
-     */
-    public double getValueOfFeature(String featureName) throws NoSuchFeatureException {
-        switch (featureName) {
-            case "DIF":
-                 
-                    return 0;
-                
-            default:
-                throw new NoSuchFeatureException(featureName);
-        }
-    }
-
-    @Override
-    /**
-     * NOTE: Heuristics must be implemented as classes in order to be used by the system.
-     */
-    public RaHHD.Heuristic getHeuristic(String heuristicName) throws NoSuchHeuristicException {        
-        switch (heuristicName) {
-            case "CWDT":
-                return new Heuristic_CWDT();
-            case "NNH":
-                return new Heuristic_NNH(); 
-            default:
-                throw new NoSuchHeuristicException(heuristicName);
-        }
-    }
-    
     private final int vehicles;
     private final int capacity;
-    private final String instanceName ;
-    
+    private final String instanceName;
+
     private final Customer depot;
-    
+
     private final List<Customer> customers;
     private final List<Customer> addedCustomers;
-    
+
     private final List<Route> routes;
-    
+
     private final List<Edge> edges;
 
     public List<Edge> getEdges() {
@@ -75,22 +47,17 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-    
-    
-      Customer customer; 
-     
-    
+
+    Customer customer;
+
     public VehicleRoutingProblem(String fileName) {
-        
-        
-        
-        
+
         String text;
         text = Utils.readFromFile(fileName);
-        
+
         String[] result = text.split("\n");
-        
-        if(result.length < 10){
+
+        if (result.length < 10) {
             System.out.println("The instance \'" + fileName + "\'cannot be loaded.");
             System.out.println("The system will halt.");
             System.exit(1);
@@ -102,35 +69,33 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
         } else {
             instanceName = result[0].trim();
            // System.out.println(instanceName);
-            
+
             String[] resultCap = result[4].trim().split("\\s+");
             vehicles = Integer.parseInt(resultCap[0].trim());
             capacity = Integer.parseInt(resultCap[1].trim());
             customers = new ArrayList<>(result.length);
-               
+
             depot = new Customer(result[9]);
-            
-         for (int x=10; x<(result.length ); x++)
-            {
-            try{
-            customer = new Customer(result[x]);
-            //System.out.println(result[x]);
-            customers.add(customer);
-            //System.out.println("" + customer.getTimeWindowStart());
-            }catch(Exception exeption){
-                
-            }
+
+            for (int x = 10; x < (result.length); x++) {
+                try {
+                    customer = new Customer(result[x]);
+                    //System.out.println(result[x]);
+                    customers.add(customer);
+                    //System.out.println("" + customer.getTimeWindowStart());
+                } catch (Exception exeption) {
+
+                }
             }
         }
-        
+
         routes = new LinkedList();
         addedCustomers = new LinkedList();
         edges = new LinkedList();
-    
+
     }
-    
-    
-       /**
+
+    /**
      * Returns the string representation of this problem.
      * <p>
      * @return The string representation of this problem.
@@ -140,240 +105,102 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
         string = new StringBuilder();
         ListIterator<Customer> iterator;
         ListIterator<Route> iteratorRoute;
-        
+
         string.append("Instance Name = ").append(instanceName).append("\n");
         string.append("Vehicles = ").append(vehicles).append("\n");
         string.append("Capacity = ").append(capacity).append("\n");
-        
+
         /*
          * We add the clients
         
-        iterator = customers.listIterator();
-        while (iterator.hasNext()) {
-            string.append(iterator.next().toString()).append("\n");
-        }
+         iterator = customers.listIterator();
+         while (iterator.hasNext()) {
+         string.append(iterator.next().toString()).append("\n");
+         }
          */
         iteratorRoute = routes.listIterator();
         while (iteratorRoute.hasNext()) {
             string.append(iteratorRoute.next().toString()).append("\n");
         }
-        
-        
+
         return string.toString().trim();
     }
-    
-    
-    
-    
-        /**
-     * Solves this problem by using the hyper-heuristic provided.
-     * <p>
-     * @param hyperHeuristic A hyper-heuristic to be used to solve this problem.
-     */
-    public void solve() {    
-        
-        Route route ;
-        route = new Route(depot, capacity); 
-        
-        
-        System.out.println(route.toString());
-        
-        
-        
-        while (!customers.isEmpty()) {
-      
-        addNextCustomer(); 
-        
+
+    private double getDistanceFromTo(Customer customerOrigin, Customer customerDestiny) {
+
+        double xCoord = Math.abs(customerDestiny.getxCoord() - customerOrigin.getxCoord());
+        double yCoord = Math.abs(customerDestiny.getyCoord() - customerOrigin.getyCoord());
+        double distance = Math.sqrt((xCoord * xCoord) + (yCoord * yCoord));
+
+        return distance;
+
+    }
+
+    public double CalculateObjectiveFunction(VehicleRoutingProblem problem) {
+        int Vehicles = problem.getRoutes().size();
+        double TotalDistance = 0;
+
+        List<Route> rutas = problem.getRoutes();
+        Route route;
+        ListIterator<Route> iterator;
+        iterator = rutas.listIterator();
+
+        while (iterator.hasNext()) {
+            route = iterator.next();
+
+            TotalDistance = route.getDistance() + TotalDistance;
         }
 
-        
+        return Vehicles + TotalDistance;
     }
     
-    
-    
-    /**
-     * Solves this instance by using the heuristic provided.
-     * <p>
-     * @param heuristic The heuristic to solve this instance.
-     * @return The cost of the solution.
-     */
-    public double solve(VRPHeuristic  heuristic) {
+    public int CalculateVehiclesUsed(VehicleRoutingProblem problem){
+        int Vehicles = problem.getRoutes().size();
         
-//        
-//        int cycles;
-//        
-//        
-//         Route route ;
-//        route = new Route(depot, capacity); 
-//        
-//        
-//        System.out.println(route.toString());
-//        
-//        
-//        
-//        while (!customers.isEmpty()) {
-//      
-//        addNextCustomer(); 
-//        
-//        }
-//        
-//        return 0;
-//        
-        heuristic.getNextElement(this);
-        
-        
-        return 0;
-    }        
-    
-    
-    
-      
-        /**
-     * Packs the next item by using the heuristic provided.
-     * <p>
-     * @param heuristic The heuristic to be used to pack the item.
-     */
-    public void addNextCustomer() {        
-       Customer customer = null;          
-          
-        double nextFound = -1;  
-        ListIterator<Customer> iterator;
-        iterator = customers.listIterator();
-        double bestFound = 1000000;
-        int count = -1;
-        int coin = -1;
-        
-        
-        while (iterator.hasNext()) {
-            
-                customer = iterator.next();
-                count ++;
-                
-                nextFound = getDistanceFromTo(depot, customer);
-                
-                if (nextFound < bestFound){
-                bestFound = nextFound;
-                coin = count;
-                }
-                
-        }
-        
-        System.out.println(""+bestFound);
-        
-        
-        customer = customers.remove(coin);
-        
-        nextFound = getDistanceFromTo(depot, customer);
-            System.out.println(""+nextFound);
-            
-        firstFit(customer);                
-             
-        addedCustomers.add(customer);
+        return Vehicles;
     }
     
-    private void firstFit(Customer customer) {
-    
-    Route route;   
-    ListIterator<Route> iterator;
-        /*
-         * If there are no route to use, a new route is created.
-         */ 
-    
-        if (routes.isEmpty()) {
-            placeItem(customer, null);
-        } else {
-            iterator = routes.listIterator();
-            while (iterator.hasNext()) {
-                route = iterator.next();
-                if (route.getDemand()+ customer.getDemand() <= route.getVehicleCapacity()){
-                    placeItem( customer, route);
-                    return;
-                }
+   public double CalculateDistance(VehicleRoutingProblem problem) {
+        
+        List<Route> rutas = problem.getRoutes();    
+        double totalDistancia = 0; 
+        
+            for (Route ruta : rutas) {
+                 
+                //totalDistancia += ruta.getDistance();
+                totalDistancia += calculaDistanciaRuta(ruta);
+               // totalTiempo += ruta.getTime();
             }
-            placeItem( customer, null);
-        }
+        return totalDistancia;
     }
-    
-    
-    /**
-     * Packs an item of the provided size into one specific bin.
-     * <p>
-     * @param itemSize The size of the item to pack.
-     * @param bin The bin where the item will be packed into.
-     */
-    private void placeItem(Customer customer, Route route) {
-        if (route != null) {            
-            if (!route.insertCustomer(customer)){
-                
-                System.out.println("The item cannot be placed in the route.");
-                System.out.println("The system will halt.");
-                System.exit(1);
-            }else{
-                
-            }        
    
-        }else {
-            /*
-             * If no bin has enough capacity to contain the item, a new bin is opened and the item
-             * is placed there.
-             */
-             Route bin;
-             bin = new Route(depot, capacity);
-             bin.insertCustomer(customer);
-             routes.add(bin);
-        }
-    }
-    
-    
-       /**
-     * Opens a new bin.
-     
-    private Route openBin() {
-        Route bin;
-        bin = new Route(depot, capacity);
-        //openBins.add(bin);
-        return bin;
-    }
-*/
-    
-   private double getDistanceFromTo(Customer customerOrigin, Customer customerDestiny){
-   
-       double xCoord = Math.abs( customerDestiny.getxCoord() - customerOrigin.getxCoord() );
-       double yCoord = Math.abs( customerDestiny.getyCoord() - customerOrigin.getyCoord() );
-       double distance = Math.sqrt((xCoord *  xCoord) + (yCoord * yCoord));
-       
-       return distance;
-       
-   }
-   
-   
-   public double CalculateObjectiveFunction(VehicleRoutingProblem problem)
-   {
-       int Vehicles = problem.getRoutes().size();
-       double TotalDistance = 0;
-       
-       
-       List<Route> rutas = problem.getRoutes();
-       Route route;   
-       ListIterator<Route> iterator;
-        iterator = rutas.listIterator();
         
-        while (iterator.hasNext()) {
-        route = iterator.next(); 
-         
-        TotalDistance = route.getDistance() + TotalDistance;
-        }
+    public double calculaDistanciaRuta(Route ruta){
+        double dRuta = 0;
+        List<Edge> arcos = ruta.getEdges();
         
-           
-       
-   return Vehicles + TotalDistance;
-   }
-   
+        for (Edge arco : arcos) {
+             double dis = getDistanceFromTo(arco.getCustomer1(), arco.getCustomer2());
+             dRuta += dis;          
+        } 
+        return dRuta;
+    }    
+ 
     
-    
+    public double MaxDistance(VehicleRoutingProblem problem){
+            List<Customer> clientes = problem.addedCustomers;
+            Customer cliente;
+            ListIterator<Customer> iterator;
+            iterator = clientes.listIterator();
+            double distance = 0;
+            while (iterator.hasNext()){
+                cliente = iterator.next();
+                distance += getDistanceFromTo(cliente, this.depot);
+            }
+            return distance;
+    }
     //----Getters
-    
-     public int getVehicles() {
+    public int getVehicles() {
         return vehicles;
     }
 
@@ -400,8 +227,109 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
     public Customer getCustomer() {
         return customer;
     }
-    
+
     public Customer getDepot() {
         return depot;
     }
+    
+    
+    
+        /**
+     * Solves this instance by using the heuristic provided.
+     * <p>
+     * @param heuristic The heuristic to solve this instance.
+     * @return The cost of the solution.
+     */
+    public double solve(VRPHeuristic heuristic) {
+        int cycles;
+       // setA = new ArrayList(elements);
+       // setB = new ArrayList((int) Math.floor(elements.size() / 2));
+       // cycles = (int) Math.floor(setA.size() / 2);
+        cycles = 1;
+        for (int i = 0; i < cycles; i++) {                    
+             heuristic.getNextElement(this);
+        }
+        return CalculateDistance(this);
+    }        
+
+        // -------------------------------------------------------------------
+    // Everything below this point is required to use the RaHHD Framework.
+    // -------------------------------------------------------------------
+    /**
+     * This method is required to let your system know how to handle the
+     * heuristic selection process.
+     */
+       /**
+     * This method is required to let your system know how to handle the heuristic selection process.
+     */    
+    /**
+     * Solves this instance by using the heuristic selector provided.
+     * <p>
+     * @param selector The heuristic selector to solve this instance.
+     * @return The cost of the solution.
+     */
+    public double solve(HeuristicSelector selector) {
+        int cycles;
+        
+        VRPHeuristic heuristic;
+        //setA = new ArrayList(elements);
+        //setB = new ArrayList((int) Math.floor(elements.size() / 2));
+        //cycles = (int) Math.floor(setA.size() / 2);
+        cycles = 1;
+        for (int i = 0; i < cycles; i++) {
+            heuristic = null;
+            try {
+                /*
+                 * In this case the featuere and heuristic manager are implemented by this class.
+                 */
+                heuristic = (VRPHeuristic) selector.getHeuristic(this, this);
+            } catch (NoSuchFeatureException | NoSuchHeuristicException e) {
+                System.out.println(e);
+                System.out.println("The system will halt.");
+                System.exit(1);
+            }
+           // setB.add(heuristic.getNextElement(this));
+            heuristic.getNextElement(this);
+        }
+        return CalculateDistance(this);
+    }
+    
+    @Override
+    /**
+     * NOTE: Features need to be normalized in the range [0, 1].
+     */
+    public double getValueOfFeature(String featureName) throws NoSuchFeatureException {
+        switch (featureName) {
+            
+//            case "Veh":
+//                return this.getRoutes().size()/this.vehicles;
+            case "DIF":
+                return CalculateDistance(this)/MaxDistance(this);
+            default:
+                throw new NoSuchFeatureException(featureName);
+        }
+    }
+
+    @Override
+    /**
+     * NOTE: Heuristics must be implemented as classes in order to be used by
+     * the system.
+     */
+    public RaHHD.Heuristic getHeuristic(String heuristicName) throws NoSuchHeuristicException {
+        switch (heuristicName) {
+//            case "CWDT":
+//                return new Heuristic_CWDT();
+//            case "NNH":
+//                return new Heuristic_NNH();
+//            case "I1":
+//                return new Heuristic_I1();
+            case "2OPT":
+                return new Heuristic_2OPT();
+            case "REL":
+                return new Heuristic_Relocate();
+            default:
+                throw new NoSuchHeuristicException(heuristicName);
+        }
+    }
+
 }

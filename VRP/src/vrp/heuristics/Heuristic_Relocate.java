@@ -360,7 +360,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
 
     @Override
     public String toString() {
-        return "Heuristica Operacion Relocate";
+        return "REL";
     }
 
     private double getDistanceFromTo(Customer customerOrigin, Customer customerDestiny) {

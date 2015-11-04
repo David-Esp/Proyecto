@@ -5,17 +5,19 @@ Feel free to add any comments in this section
 <vector-heuristic-selector>
 	<features>
 		<feature name="DIF"/>
+		<feature name="BRO"/>
+		<feature name="BED"/>
 	</features>
 	<heuristics>
-		<heuristic name="2OPT"/>
+		<heuristic name="RELINTRA"/>
 		<heuristic name="REL"/>
+		<heuristic name="2OPT"/>
 	</heuristics>
-	<rules nbRules="6">
-		<rule condition="0.03887" action="1"/>
-		<rule condition="0.26270" action="1"/>
-		<rule condition="0.21582" action="1"/>
-		<rule condition="0.42441" action="0"/>
-		<rule condition="0.19121" action="0"/>
-		<rule condition="0.80879" action="0"/>
+	<rules nbRules="5">
+		<rule condition="0.43379 0.55449 0.98105" action="1"/>
+		<rule condition="0.31543 0.72324 0.23574" action="2"/>
+		<rule condition="0.13379 0.38809 0.89551" action="0"/>
+		<rule condition="0.90723 0.05996 0.81230" action="0"/>
+		<rule condition="0.98223 0.50059 0.06348" action="1"/>
 	</rules>
 </vector-heuristic-selector>

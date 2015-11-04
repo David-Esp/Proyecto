@@ -37,6 +37,8 @@ public class Heuristic_NNH extends VRPHeuristic{
         
           int vehicles = problem.getVehicles();
          int capacity = problem.getCapacity();
+         //capacity = (int) (capacity * 0.8);
+         
          String instanceName = problem.getInstanceName();
           Customer depot = problem.getDepot();
           List<Customer> customers = problem.getCustomers();
@@ -225,7 +227,7 @@ public class Heuristic_NNH extends VRPHeuristic{
      */
      
     public String toString() {
-        return "Nearest Neighbour Heuristic";
+        return "NNH";
     }
     
     

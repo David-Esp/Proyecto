@@ -19,8 +19,8 @@ import vrp.Problem.VehicleRoutingProblem;
  */
 public class Heuristic_2OPT extends VRPHeuristic{
  
-    /**
-     *
+        /**
+     * Creates a new instance of <code>Heuristic_2OPT</code>.
      */
     public Heuristic_2OPT() {
     }
@@ -124,7 +124,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
                     Edge newEdgeJ = edgesK.get(temJ);
                     double newEOS1 = (eoSCustomerJ_1 + distanceJK_after) + wtj + newEdgeJ.getCustomer1().getServiceTime();
                     if(newEOS1 + newEdgeJ.getDistance() > newEdgeJ.getCustomer2().getTimeWindowEnd()){
-                        //*********************************** En caso de que alguna ventana de tiempo se chingue
+                        //*********************************** En caso de que alguna ventana de tiempo se viole
                         return false;
                     }else{
                         if(newEdgeJ.getCustomer2().getTimeWindowStart() > newEOS1 + newEdgeJ.getDistance()){
@@ -153,7 +153,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
                     Edge newEdgeK = edgesJ.get(temK);
                     double newEOS1 = (eoSCustomerK_1 + distanceKJ_after) + wtk + newEdgeK.getCustomer1().getServiceTime();
                     if(newEOS1 + newEdgeK.getDistance() > newEdgeK.getCustomer2().getTimeWindowEnd()){
-                        //*********************************** En caso de que alguna ventana de tiempo se chingue
+                        //*********************************** En caso de que alguna ventana de tiempo se viole
                         return false;
                     }else{
                         if(newEdgeK.getCustomer2().getTimeWindowStart() > newEOS1 + newEdgeK.getDistance()){
@@ -168,11 +168,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
 
                     }
                 }
-              }
-              
-              
-              
-              
+              }   
               return true;
           }  
           
@@ -238,16 +234,14 @@ public class Heuristic_2OPT extends VRPHeuristic{
                             
                             if( feasibleToDo(routeJ,j, routeK, k) ){
                                 //En caso de que sea posible, guardamos que arcos son los que se pueden cambiar y el ahorro que nos daria (para despues hacer el mejor cambio posible
-                               // System.out.println("s-ss-s-s");
-                                    
+                                  
                                     savings = candSavings;
                                     selRutaJ = routeJ ;
                                     selIndexEdgeJ = j;
                                     selRutaK = routeK;
                                     selIndexEdgeK = k;
                                     //Guardamos los datos de las rutas y los arcos con mayor ahorro de ruta :) 
-                                    //System.out.println("Wooo o " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
-            
+                                  
                                 
                             }
                         }
@@ -261,10 +255,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
 
             
         }
-        
-                    
-            
-            
+         
             
             //Se revisa que se haya encontrado algun arco y se toma el mejor encontrado.
             //Despues se realiza el cambio y se reajustan ambas rutas que se modificaron.
@@ -392,11 +383,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
             if(tempRouteK.getEdges().size() > 1)
                 problem.getRoutes().add(tempRouteK);
             
-            
-          //  System.out.println("Temporales  " + tempRouteJ + " temporal K " + tempRouteK);
-            
-           // System.out.println("WooooooWwowowowoooooooooooooooo " + selRutaJ + " something " + selRutaK + " something " + selIndexEdgeJ + " something " + selIndexEdgeK + " something ");
-          //  System.out.println("se realizo un cambio 2 OPT");
+         
             return 1;
        }else{
           // System.out.println("Ningun cambio posible");
@@ -425,12 +412,12 @@ public class Heuristic_2OPT extends VRPHeuristic{
        
    }
    
-   
+   /*
      private boolean checkFeasibility(  List<Edge> edges, int index, Customer customer){
       
       Edge newEdge = edges.get(index);
       
-      //bj (not a Blow Job) es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
+      //bj   es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
       double bj = newEdge.getEndOfServiceCustomer1()+newEdge.getDistance()+newEdge.getWaitingTime();
       
       double distance1 = getDistanceFromTo(customer, newEdge.getCustomer1());
@@ -494,6 +481,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
       }
      
   }
+     */
    
  
 }

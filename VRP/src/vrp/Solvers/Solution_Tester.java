@@ -18,6 +18,11 @@ import vrp.Problem.VehicleRoutingProblem;
  */
 public class Solution_Tester {
     
+    /**
+     *
+     * @param problem
+     * @return
+     */
     public boolean solution(VehicleRoutingProblem problem){
         
         List<Route> rutas = problem.getRoutes();

@@ -19,8 +19,10 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import vrp.Problem.VehicleRoutingProblem;
+import vrp.Solvers.Solution_Tester;
 import vrp.VRP;
 import vrp.heuristics.Heuristic_2OPT;
+import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
 import vrp.heuristics.Heuristic_Relocate;
 
@@ -32,13 +34,17 @@ import vrp.heuristics.Heuristic_Relocate;
  */
 public class RunSelector {
     
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {        
         VectorHeuristicSelector selector;        
         /*
          * Uncomment to produce a new heuristic selector and save it to a file.
          */  
-//        selector = generateHeuristicSelector(501434); // The seed for replication of the evolutionary process.
-//        selector.save("selector.xml");
+        selector = generateHeuristicSelector(501434); // The seed for replication of the evolutionary process.
+        selector.save("selector.xml");
         /*
          * Uncomment to load a saved heuristic selector from a file.
          */ 
@@ -62,7 +68,7 @@ public class RunSelector {
                 Logger.getLogger(VRP.class.getName()).log(Level.SEVERE, null, ex);
             }
         
-        
+        Solution_Tester tester = new Solution_Tester();
         int nbInstances, maxValue;
         Random random;        
         VehicleRoutingProblem[] problems;
@@ -74,19 +80,59 @@ public class RunSelector {
         problems2 = new VehicleRoutingProblem[results.size()];
         random = new Random(12345); // The seed for the generation of the random instances to test the performance.
         Heuristic_NNH nearestN =  new Heuristic_NNH();
-        System.out.println("2OPT, REL, SELECTOR");
+        Heuristic_I1 i1 = new Heuristic_I1();
+        //System.out.println("2OPT, REL, SELECTOR");
+        System.out.println("  SELECTOR");
         for (int i = 0; i < results.size(); i++) {
             problems[i] = new VehicleRoutingProblem("Instances/solomon_100/" +   results.get(i));
-             while ( nearestN.getNextElement(problems[i]) == 1){}
-              problems2[i] = problems[i] ;
+              while ( i1.getNextElement(problems[i]) == 1){}
+             // problems2[i] = problems[i] ;
             string = new StringBuilder();
       //    string.append(problems2[i].solve(new Heuristic_2OPT()));//.append(", ");
-      //     string.append(problems2[i].solve(new Heuristic_Relocate()));//.append(", ");
-          //  string.append(problems[i].solve(new MinValue())).append(", ");
-          //  string.append(problems[i].solve(new MaxValue())).append(", ");
+      //     string.append(problems2[i].solve(new Heuristic_Relocate()));//.append(", "); 
            // string.append(problems[i].solve(new Rand())).append(", ");
-           string.append(problems2[i].solve(selector));
+//          problems2[i].solve(selector);
+
+          
+            
+           
+       /*     
+            
+        double actual = problems[i].solve(selector);
+        double improve;
+        int some = 1;
+        int coin;
+        coin = 10;
+         //while(some == 1  ){
+         while(  coin > 1  ){
+    
+//            
+            improve = problems[i].solve(selector);
+            if( improve < (actual - 0.001)){
+                coin = 10;
+                actual = improve;
+            }else{
+                coin = -1;
+            }
+        }
+         */   
+            string.append(problems[i].solve(selector));
+            
+            
             System.out.println(string.toString().trim());
+             
+            
+            
+             if(tester.solution(problems[i])) {
+             //  System.out.println( problems2[i].toString() );
+                
+              //  imprimirGraficas(problem);      
+            }else{
+                 System.out.println("Something wrong");
+             }
+            
+            
+            
         }
          
     }
@@ -105,11 +151,12 @@ public class RunSelector {
         HeuristicSelector heuristicSelector;
         random = new Random(seed);
         VectorIndividual.setRandomNumberGenerator(random.nextLong());
-        featureNames = new String[]{"DIF"};        
-        heuristicNames = new String[]{"2OPT", "REL"};
-        evaluationFunction = new Evaluator(100, 100, 10, random.nextLong());
-        selectionOperator = new TournamentSelectionOperator(2, true, random.nextLong());
-        heuristicSelector = ((VectorIndividual) VectorHeuristicSelectorFramework.run(featureNames, heuristicNames, 100, 500, 1.0, 0.1, selectionOperator, evaluationFunction, GeneticAlgorithmType.STEADY_STATE, true, random.nextLong())).getHeuristicSelector();
+        //featureNames = new String[]{"GAP", "DIF", "CUS", "VEH"}; 
+        featureNames = new String[]{  "DIF", "BRO", "BED"};   
+        heuristicNames = new String[]{"RELINTRA", "REL" , "2OPT"  };
+        evaluationFunction = new Evaluator(100,100, 10, random.nextLong());
+        selectionOperator = new TournamentSelectionOperator(4, true, random.nextLong()); //True = Minimizing 
+        heuristicSelector = ((VectorIndividual) VectorHeuristicSelectorFramework.run(featureNames, heuristicNames, 150, 300, 1, 0.1, selectionOperator, evaluationFunction, GeneticAlgorithmType.STEADY_STATE, true, random.nextLong())).getHeuristicSelector();
         return ((VectorHeuristicSelector) heuristicSelector);
     }
     
@@ -134,11 +181,8 @@ public class RunSelector {
             List<String> results = new ArrayList<>();
             try {
                 Files.walk(Paths.get("Instances/solomon_100")).forEach(filePath -> {
-                    if (Files.isRegularFile(filePath)) {
-
-                        results.add(filePath.getFileName().toString());
-                  //  System.out.println(filePath); 
-
+                    if (Files.isRegularFile(filePath)) { 
+                        results.add(filePath.getFileName().toString()); 
                     }
                 });
             } catch (IOException ex) {
@@ -152,8 +196,9 @@ public class RunSelector {
             for (int i = 0; i < results.size(); i++) {
             //for (String result:results){
                 problems[i] = new VehicleRoutingProblem("Instances/solomon_100/" +   results.get(i));
-                Heuristic_NNH nearestN =  new Heuristic_NNH();
-                while ( nearestN.getNextElement(problems[i]) == 1){}
+                //Heuristic_NNH nearestN =  new Heuristic_NNH();
+                 Heuristic_I1 i1 = new Heuristic_I1();
+                 while ( i1.getNextElement(problems[i]) == 1){}
                 
             } 
         }
@@ -163,13 +208,12 @@ public class RunSelector {
             double cost;
             VectorIndividual featureBasedIndividual;
             featureBasedIndividual = (VectorIndividual) individual;
-            cost = 0;
-           // System.out.println("Im here!");
+            cost = 0; 
             for (VehicleRoutingProblem problem : problems) {
               //  System.out.println(" cost " + cost);
                 cost += problem.solve(featureBasedIndividual.getHeuristicSelector());
             }
-            //System.out.println("Even here ");
+            
             return cost;
         }
         

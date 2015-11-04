@@ -22,7 +22,7 @@ import vrp.Problem.VehicleRoutingProblem;
 public class Heuristic_CWDT extends VRPHeuristic{
     
         /**
-     * Creates a new instance of <code>MaxValue</code>.
+     * Creates a new instance of <code>Heuristic_CWDT</code>.
      */
     public Heuristic_CWDT() {
     }

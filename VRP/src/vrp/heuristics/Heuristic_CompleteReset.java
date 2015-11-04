@@ -25,7 +25,7 @@ public class Heuristic_CompleteReset extends VRPHeuristic{
         problem.getEdges().clear();
         problem.getRoutes().clear();
  
-        return 1;
+        return 0;
         
         
         

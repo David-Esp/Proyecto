@@ -18,7 +18,14 @@ import vrp.Problem.VehicleRoutingProblem;
  */
 public class Heuristic_Relocate extends VRPHeuristic {
     
-    
+    /**
+     *
+     * @param edgeJ
+     * @param customerInsertJ
+     * @param customerK_1
+     * @param customerK_2
+     * @return
+     */
     public double tieneAhorro(Edge edgeJ, Customer customerInsertJ, Customer customerK_1, Customer customerK_2){
           Customer customerJ_1 = edgeJ.getCustomer1();
           Customer customerJ_2 = edgeJ.getCustomer2();
@@ -145,8 +152,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
         Route routeK_rel = null;
         int indexCustomerK_rel = 0; 
         //------------------------
-        
-      //  int cantRoutes =routes.size();
+         
         double ahorro = 0;
         //En este caso es mejor irnos ruta por ruta, revisando en cada ruta si sus clientes pueden ponerse en los arcos de las rutas siguientes
         //O tambien si los clientes de las otras rutas pueden agregarse a alguno de sus arcos 
@@ -165,23 +171,17 @@ public class Heuristic_Relocate extends VRPHeuristic {
                     for(int xc2=1;xc2 <(clientesCand.size() - 1)  ; xc2++){
                         Customer customerCan = clientesCand.get(xc2);
                         double ahorroCan = tieneAhorro(edgeCan,customerCan, clientesCand.get(xc2-1), clientesCand.get(xc2+1) );
-                        if( ahorroCan > 0){
-                           // ahorro = ahorroCan;
-                           // System.out.println("Ahorro " + ahorro);
-                            //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility
-                            //System.out.println("Es casi " + rutaA +  " del arco " + xe + " el cliente " + customerCan );
-                            if( esPosible(rutaA, xe, customerCan) ){
-                                // System.out.println("Es factible1" + rutaA +  " del arco " + xe + " el cliente " + customerCan );
+                        if( ahorroCan > 0){ 
+                            //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility 
+                            if( esPosible(rutaA, xe, customerCan) ){ 
                                 if( ahorroCan > ahorro){
-                                    ahorro = ahorroCan;
-                                   // System.out.println("Es factible2" + rutaA +  " del arco " + xe + " el cliente " + customerCan );
+                                    ahorro = ahorroCan; 
                                      routeJ_rel = rutaA;
                                      indexEdgeJ_rel = xe;
                                      routeK_rel = rutaB;
                                      indexCustomerK_rel = xc2 ;
                                      
-                                    // System.out.println("Es factible 222" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
-                                        esPosible(rutaA, xe, customerCan);
+                                      esPosible(rutaA, xe, customerCan);
                                 }
                                 //Entonces se guardan todos los parametros para hacer el cambio despues 
                             }
@@ -203,18 +203,11 @@ public class Heuristic_Relocate extends VRPHeuristic {
                     for(int xe=0;xe <(edgesCan.size() - 1)  ; xe++){
                         Edge edgeCan = edgesCan.get(xe);
                         double ahorroCan = tieneAhorro(edgeCan,customerCan, clientes.get(xc-1), clientes.get(xc+1) );
-                     //  System.out.println("Ahorro 22 " + ahorroCan);
                         if( ahorroCan > 0){
-                           // System.out.println("Es casi " + rutaA +  " del arco " + xe + " el cliente " + customerCan );
-                           // ahorro = ahorroCan;
-                           // System.out.println("Ahorro 2 " + ahorro);
-                            //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility
-                           // System.out.println("Es casi2 " + rutaB +  " del arco " + xe + " el cliente " + customerCan );
+                               //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility
                             if( esPosible(rutaB, xe, customerCan) ){
-                              //  System.out.println("Es factible3" + rutaB +  " del arco " + xe + " el cliente " + customerCan );
                                 if( ahorroCan > ahorro){
                                     ahorro = ahorroCan;
-                                   // System.out.println("Es factible4" + rutaB +  " del arco " + xe + " el cliente " + customerCan );
                                     
                                     //Tenemos que guardar La ruta a al que se le va a agregar el cliente, y su arco,
                                     //Guardar la ruta donde se va a quitar el cliente, el cliente y los arcos que se van a remover
@@ -223,7 +216,6 @@ public class Heuristic_Relocate extends VRPHeuristic {
                                      routeK_rel = rutaA;
                                      indexCustomerK_rel = xc ;
                                      
-                                    // System.out.println("Es factible 221" + routeJ_rel +  " del arco " + indexEdgeJ_rel + " el cliente  de la ruta " + routeK_rel + " cliente " + indexCustomerK_rel );
                                      esPosible(rutaB, xe, customerCan);
                                 }
                                 //Entonces se guardan todos los parametros para hacer el cambio despues 
@@ -237,13 +229,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
                 
             }
             
-        }
-        
-        
-        
-        
-               
-            
+        } 
             
             //Se revisa que se haya encontrado algun arco y se toma el mejor encontrado.
             //Despues se realiza el cambio y se reajustan ambas rutas que se modificaron.
@@ -253,7 +239,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
        
        if(ahorro > 0){
            
-           //Arreglamos la ruta donde se arregla el cliente
+           //Arreglamos la ruta donde se agrega el cliente
            
           List<Customer> listaCustomersK = routeK_rel.getCustomers();
           Customer customerK_rel = listaCustomersK.get(indexCustomerK_rel);
@@ -347,6 +333,13 @@ public class Heuristic_Relocate extends VRPHeuristic {
               newEosCK = newEosCK + newWtK + someE.getDistance() + someE.getCustomer2().getServiceTime();
            }        
            
+         
+                       
+            if(routeK_rel.getEdges().size() == 1)
+                problem.getRoutes().remove(routeK_rel);
+            
+           
+           
             //System.out.println("doneChange");
             return 1;
        }else{
@@ -373,12 +366,12 @@ public class Heuristic_Relocate extends VRPHeuristic {
 
     }
     
-      
+      /*
   private boolean checkFeasibility(  List<Edge> edges, int index, Customer customer){
       
       Edge newEdge = edges.get(index);
       
-      //bj (not a Blow Job) es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
+      //bj es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
       double bj = newEdge.getEndOfServiceCustomer1()+newEdge.getDistance()+newEdge.getWaitingTime();
       
       double distance1 = getDistanceFromTo(customer, newEdge.getCustomer1());
@@ -442,5 +435,7 @@ public class Heuristic_Relocate extends VRPHeuristic {
       }
      
   }
+    
+    */
 
 }

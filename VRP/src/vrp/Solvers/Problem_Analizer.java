@@ -18,7 +18,12 @@ import vrp.Problem.VehicleRoutingProblem;
  */
 public class Problem_Analizer {
   
-        public String solution(VehicleRoutingProblem problem){
+    /**
+     *
+     * @param problem
+     * @return
+     */
+    public String solution(VehicleRoutingProblem problem){
         
             
         List<Route> rutas = problem.getRoutes();    
@@ -47,6 +52,11 @@ public class Problem_Analizer {
         
     }
         
+    /**
+     *
+     * @param ruta
+     * @return
+     */
     public double calculaDistanciaRuta(Route ruta){
         double dRuta = 0;
         List<Edge> arcos = ruta.getEdges();

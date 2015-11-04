@@ -28,7 +28,10 @@ public class Customer {
     private List<Double> distances;
     private List<Integer> times;
     
-    
+    /**
+     *
+     * @param customerTxt
+     */
     public Customer(String customerTxt) {
         
         String[] caract = customerTxt.trim().split("\\s+");
@@ -66,82 +69,163 @@ public class Customer {
      
     // ----------------------    Getters And Setters    -------------------------
 
+    /**
+     *
+     * @return
+     */
+    
     public int getNumber() {
         return number;
     }
 
+    /**
+     *
+     * @param number
+     */
     public void setNumber(int number) {
         this.number = number;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getxCoord() {
         return xCoord;
     }
 
+    /**
+     *
+     * @param xCoord
+     */
     public void setxCoord(double xCoord) {
         this.xCoord = xCoord;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getyCoord() {
         return yCoord;
     }
 
+    /**
+     *
+     * @param yCoord
+     */
     public void setyCoord(double yCoord) {
         this.yCoord = yCoord;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getDemand() {
         return demand;
     }
 
+    /**
+     *
+     * @param demand
+     */
     public void setDemand(double demand) {
         this.demand = demand;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getServiceTime() {
         return serviceTime;
     }
 
+    /**
+     *
+     * @param serviceTime
+     */
     public void setServiceTime(int serviceTime) {
         this.serviceTime = serviceTime;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getTimeWindowStart() {
         return timeWindowStart;
     }
 
+    /**
+     *
+     * @param timeWindowStart
+     */
     public void setTimeWindowStart(int timeWindowStart) {
         this.timeWindowStart = timeWindowStart;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getTimeWindowEnd() {
         return timeWindowEnd;
     }
 
+    /**
+     *
+     * @param timeWindowEnd
+     */
     public void setTimeWindowEnd(int timeWindowEnd) {
         this.timeWindowEnd = timeWindowEnd;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isIsTimeWindowFlexible() {
         return isTimeWindowFlexible;
     }
 
+    /**
+     *
+     * @param isTimeWindowFlexible
+     */
     public void setIsTimeWindowFlexible(boolean isTimeWindowFlexible) {
         this.isTimeWindowFlexible = isTimeWindowFlexible;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Double> getDistances() {
         return distances;
     }
 
+    /**
+     *
+     * @param distances
+     */
     public void setDistances(List<Double> distances) {
         this.distances = distances;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Integer> getTimes() {
         return times;
     }
 
+    /**
+     *
+     * @param times
+     */
     public void setTimes(List<Integer> times) {
         this.times = times;
     }

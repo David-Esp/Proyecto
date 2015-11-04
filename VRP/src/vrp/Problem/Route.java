@@ -26,7 +26,7 @@ public class Route {
        /**
      *
      * @param depot
-     * @param vehicleCapacity
+     * @param capacity
      */
     public Route(Customer depot, int capacity) {
         
@@ -39,7 +39,11 @@ public class Route {
         vehicleCapacity = capacity;
     }
     
-    
+    /**
+     *
+     * @param customer
+     * @return
+     */
     public boolean insertCustomer(Customer customer){
         
          customers.add(customer);
@@ -62,9 +66,13 @@ public class Route {
         
     }
     
-    
-    
-        public boolean insertCustomerAt(Customer customer, int index){
+    /**
+     *
+     * @param customer
+     * @param index
+     * @return
+     */
+    public boolean insertCustomerAt(Customer customer, int index){
         
          customers.add(index, customer);
           
@@ -161,6 +169,11 @@ public class Route {
     
     // ------------------ Getters
     
+    /**
+     *
+     * @return
+     */
+        
      public double getDistance() {
          return distance;
     }
@@ -175,36 +188,68 @@ public class Route {
        
    }
 
+    /**
+     *
+     * @return
+     */
     public int getTime() {
         return time;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getDemand() {
         return demand;
     }
     
+    /**
+     *
+     * @param distance
+     */
     public void setDistance(double distance) {
         this.distance = distance;
         
     }
     
+    /**
+     *
+     * @param capacity
+     */
     public void setVehicleCapacity( int capacity){
         this.vehicleCapacity = capacity;
     }
     
+    /**
+     *
+     * @param demand
+     */
     public void setDemand(double demand){
         this.demand = demand;
         
     }
 
+    /**
+     *
+     * @return
+     */
     public int getVehicleCapacity() {
         return vehicleCapacity;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Customer> getCustomers() {
         return customers;
     }
     
+    /**
+     *
+     * @return
+     */
     public List<Edge> getEdges() {
         return edges;
     }

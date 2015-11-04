@@ -3,16 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/Solvers/Problem_Analizer.java</file>
+            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/heuristics/Heuristic_SelectiveReset.java</file>
             <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/Problem/VehicleRoutingProblem.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/heuristics/Heuristic_CWDT.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/heuristics/Heuristic_I1.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/heuristics/Heuristic_Relocate.java</file>
+            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/RunSelector.java</file>
             <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/VRP.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/Run.java</file>
             <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/Test.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/heuristics/Heuristic_2OPT.java</file>
-            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/TestConstructivas.java</file>
+            <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/TestHH.java</file>
             <file>file:/C:/Users/David/Documents/GitHub/Proyecto/VRP/src/vrp/TestIterativas.java</file>
         </group>
     </open-files>

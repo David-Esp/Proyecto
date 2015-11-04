@@ -26,7 +26,11 @@ import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_CWDT;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
+import vrp.heuristics.Heuristic_PartialReset;
+import vrp.heuristics.Heuristic_RandomReset;
 import vrp.heuristics.Heuristic_Relocate;
+import vrp.heuristics.Heuristic_RelocateIntraRoute;
+import vrp.heuristics.Heuristic_SelectiveReset;
 
 /**
  *
@@ -34,7 +38,10 @@ import vrp.heuristics.Heuristic_Relocate;
  */
 public class Test {
 
-   
+    /**
+     *
+     * @param problem
+     */
     public static void imprimirGraficas(VehicleRoutingProblem problem){
         Writer writer = null;
         StringBuilder stringI1;
@@ -107,7 +114,7 @@ public class Test {
         //------------------------------
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream("solutions/i1/25/" + problem.getInstanceName() + ".gml"), "utf-8"));
+                    new FileOutputStream("solutions/test/100/" + problem.getInstanceName() + ".gml"), "utf-8"));
             writer.write("" + stringI1);
         } catch (IOException ex) {
             // report
@@ -125,7 +132,10 @@ public class Test {
         
     }
     
-    
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // TODO code application logic here
         
@@ -140,9 +150,14 @@ public class Test {
         Heuristic_I1 i1 = new Heuristic_I1();
         Heuristic_Relocate relocate =  new Heuristic_Relocate();
         Heuristic_2OPT opt = new Heuristic_2OPT();
+        Heuristic_PartialReset part = new Heuristic_PartialReset();
+        Heuristic_RandomReset ranr = new Heuristic_RandomReset();
+        Heuristic_SelectiveReset selR = new Heuristic_SelectiveReset();
         Solution_Tester tester = new Solution_Tester();
         Problem_Analizer pAnal = new Problem_Analizer();
         VehicleRoutingProblem problem ;
+        
+        Heuristic_RelocateIntraRoute relocateIntra = new Heuristic_RelocateIntraRoute();
  
          List<String> results = new ArrayList<>();
         
@@ -174,64 +189,784 @@ public class Test {
           for (String result:results){
             problem = new VehicleRoutingProblem("Instances/solomon_100/" +   result);
             long start = System.currentTimeMillis();  
-            while ( nearestN.getNextElement(problem) == 1){}
-            
-            long elapsedTime = System.currentTimeMillis() - start;
-           
-            if(tester.solution(problem)) {
-                stringI1 = new StringBuilder();
-                stringI1.append(elapsedTime).append(" ");
-                stringI1.append(problem.getInstanceName()).append(" ");
-                stringI1.append(pAnal.solution(problem)).append("\n");
-                string.append(stringI1);
-                
-              //  imprimirGraficas(problem);      
-            }
-            else
-              System.out.println("Mala Solucion"); 
-        }
-        
-        
-        
-        
-        //-------------------------------------------------
-        // -------------------CWTD 
-        //-------------------------------------------------
-        /*
-         //System.out.println("" + cwdt.toString()); 
-          string.append(cwdt.toString()).append("\n");
-          for (String result:results){
-            problem = new VehicleRoutingProblem("Instances/solomon_100/" +   result);
-            long start = System.currentTimeMillis();  
             while ( cwdt.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              
+             selR.getNextElement(problem);
+             while ( cwdt.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( nearestN.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( i1.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             
+              
+             selR.getNextElement(problem);
+             while ( cwdt.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( nearestN.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( i1.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+              selR.getNextElement(problem);
+             while ( cwdt.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( nearestN.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( i1.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             
+              
+             selR.getNextElement(problem);
+             while ( cwdt.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( nearestN.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             
+             selR.getNextElement(problem);
+             while ( i1.getNextElement(problem) == 1){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+              while(relocate.getNextElement(problem) ==1){}
+             while(relocateIntra.getNextElement(problem) ==1 ){}
+             while(opt.getNextElement(problem) ==1){}
+             
+             System.out.println(problem.toString());
+       //     part.getNextElement(problem);
             
-      long elapsedTime = System.currentTimeMillis() - start;
-           
-            if(tester.solution(problem)) {
-                stringI1 = new StringBuilder();
-                stringI1.append(elapsedTime).append(" ");
-                stringI1.append(problem.getInstanceName()).append(" ");
-                stringI1.append(pAnal.solution(problem)).append("\n");
-                string.append(stringI1);
-                
-                imprimirGraficas(problem);      
-            }
-            else
-              System.out.println("Mala Solucion"); 
-        }
-         
-         */
-         
-         /*    
-         //-------------------------------------------------
-        // -------------------Solomon I1
-        //-------------------------------------------------
-          //System.out.println("" + i1.toString());
-          string.append(i1.toString()).append("\n");
-          for (String result:results){
-            problem = new VehicleRoutingProblem("Instances/solomon_25/" +   result);
-            long start = System.currentTimeMillis();  
-            while ( i1.getNextElement(problem) == 1){}
+          //  
+            
+        //    while(nearestN.getNextElement(problem) ==1){}
             
             long elapsedTime = System.currentTimeMillis() - start;
            
@@ -242,13 +977,14 @@ public class Test {
                 stringI1.append(pAnal.solution(problem)).append("\n");
                 string.append(stringI1);
                 
-                imprimirGraficas(problem);      
+                //imprimirGraficas(problem);      
             }
             else
               System.out.println("Mala Solucion"); 
         }
-          
-       */
+        
+        
+         
         System.out.println(" " + string); 
     }
     

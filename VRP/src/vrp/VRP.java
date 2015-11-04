@@ -21,6 +21,7 @@ import vrp.heuristics.Heuristic_CWDT;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
 import vrp.heuristics.Heuristic_Relocate;
+import vrp.heuristics.Heuristic_RelocateIntraRoute;
 
 /**
  *
@@ -44,13 +45,18 @@ he command line arguments
         VehicleRoutingProblem problem,problem2, problem3;
  
   
-       problem = new VehicleRoutingProblem("Instances/solomon_100/R101.txt"); 
+       problem = new VehicleRoutingProblem("Instances/solomon_100/R204.txt"); 
        Heuristic_NNH d =  new Heuristic_NNH();
        Heuristic_I1 i1 = new Heuristic_I1();
+       Heuristic_RelocateIntraRoute rint = new Heuristic_RelocateIntraRoute();
+               
             Solution_Tester sol = new Solution_Tester();
        Problem_Analizer pAnal = new Problem_Analizer();
        
+       while ( d.getNextElement(problem) == 1){}
+       while (rint.getNextElement(problem) == 1){}
        
+  /*     
        while ( i1.getNextElement(problem) == 1){}
        System.out.println(problem.toString());
        System.out.println(pAnal.solution(problem));
@@ -68,7 +74,7 @@ he command line arguments
        while (opt.getNextElement(problem) == 1 ){}
        System.out.println(pAnal.solution(problem));
        System.out.println(problem.toString());
-  
+  */
       
        if(sol.solution(problem)) {
          System.out.println(problem.toString());

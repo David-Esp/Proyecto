@@ -4,17 +4,17 @@ Feel free to add any comments in this section
 -->
 <vector-heuristic-selector>
 	<features>
-		<feature name="DIF"/>
+		<feature name="VEH"/>
+		<feature name="GAP"/>
 	</features>
 	<heuristics>
-		<heuristic name="2OPT"/>
+		<heuristic name="RELINTRA"/>
 		<heuristic name="REL"/>
+		<heuristic name="2OPT"/>
 	</heuristics>
-	<rules nbRules="5">
-		<rule condition="0.77246" action="1"/>
-		<rule condition="0.57246" action="0"/>
-		<rule condition="0.13848" action="1"/>
-		<rule condition="0.43730" action="0"/>
-		<rule condition="0.42207" action="0"/>
+	<rules nbRules="3">
+		<rule condition="0.48652 0.75000" action="0"/> 
+		<rule condition="0.48652 0.18418" action="1"/> 
+		<rule condition="0.48652 0.68004" action="2"/>
 	</rules>
 </vector-heuristic-selector>

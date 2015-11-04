@@ -403,7 +403,7 @@ public class Heuristic_I1 extends VRPHeuristic{
      */
      
     public String toString() {
-        return "Solomon's Insertion Heuristic I1";
+        return "I1";
     }
     
     

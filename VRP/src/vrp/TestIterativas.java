@@ -34,7 +34,10 @@ import vrp.heuristics.Heuristic_Relocate;
  */
 public class TestIterativas {
 
-   
+    /**
+     *
+     * @param problem
+     */
     public static void imprimirGraficas(VehicleRoutingProblem problem){
         Writer writer = null;
         StringBuilder stringI1;
@@ -125,7 +128,10 @@ public class TestIterativas {
         
     }
     
-    
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // TODO code application logic here
         

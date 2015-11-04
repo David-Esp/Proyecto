@@ -1,0 +1,22 @@
+<!--=============================================
+Feel free to add any comments in this section
+=============================================
+-->
+<vector-heuristic-selector>
+	<features>
+		<feature name="VEH"/>
+		<feature name="GAP"/>
+	</features>
+	<heuristics>
+		<heuristic name="RELINTRA"/>
+		<heuristic name="REL"/>
+		<heuristic name="2OPT"/>
+	</heuristics>
+	<rules nbRules="5">
+		<rule condition="0.48652 0.03770" action="1"/>
+		<rule condition="0.83574 0.65176" action="1"/>
+		<rule condition="0.11621 0.18418" action="2"/>
+		<rule condition="0.57559 0.62949" action="1"/>
+		<rule condition="0.00254 0.34004" action="0"/>
+	</rules>
+</vector-heuristic-selector>

@@ -23,10 +23,10 @@ public class Heuristic_PartialReset extends VRPHeuristic {
         //double rnd = Math.random() * x ; 
        // System.out.println("Cantidad de rutas a borrar  = " + rnd);
         
-        double rnd = x/2;
+        double half = x/2;
         
         
-        for (int i = x; i>rnd; i--){
+        for (int i = x; i>half; i--){
             List<Route> routes = problem.getRoutes();
             Route ruta = routes.get(i-1);
             List<Customer> customers = problem.getCustomers();
@@ -42,7 +42,7 @@ public class Heuristic_PartialReset extends VRPHeuristic {
         
         
         
-        return 1;
+        return 0;
         
         
         
@@ -50,7 +50,7 @@ public class Heuristic_PartialReset extends VRPHeuristic {
 
     @Override
     public String toString() {
-        return "Partial Reset Heuristic";
+        return "PARTR";
     }
     
     

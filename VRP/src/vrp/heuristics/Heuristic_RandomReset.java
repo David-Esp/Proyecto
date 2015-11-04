@@ -39,7 +39,7 @@ public class Heuristic_RandomReset extends VRPHeuristic{
         
         
         
-        return 1;
+        return 0;
         
         
         
@@ -47,7 +47,7 @@ public class Heuristic_RandomReset extends VRPHeuristic{
 
     @Override
     public String toString() {
-        return "Random Reset Heuristic";
+        return "RANR";
     }
     
     

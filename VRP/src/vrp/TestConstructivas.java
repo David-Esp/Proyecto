@@ -34,7 +34,10 @@ import vrp.heuristics.Heuristic_Relocate;
  */
 public class TestConstructivas {
 
-   
+    /**
+     *
+     * @param problem
+     */
     public static void imprimirGraficas(VehicleRoutingProblem problem){
         Writer writer = null;
         StringBuilder stringI1;
@@ -107,7 +110,7 @@ public class TestConstructivas {
         //------------------------------
         try {
             writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream("solutions/i1/25/" + problem.getInstanceName() + ".gml"), "utf-8"));
+                    new FileOutputStream("solutions/nnh-rel/100/" + problem.getInstanceName() + ".gml"), "utf-8"));
             writer.write("" + stringI1);
         } catch (IOException ex) {
             // report
@@ -125,7 +128,10 @@ public class TestConstructivas {
         
     }
     
-    
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // TODO code application logic here
         
@@ -402,7 +408,7 @@ public class TestConstructivas {
                 stringI1.append(pAnal.solution(problem)).append("\n");
                 string.append(stringI1);
                 
-                //imprimirGraficas(problem);      
+                 imprimirGraficas(problem);      
             }
             else
             {

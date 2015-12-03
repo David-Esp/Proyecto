@@ -11,13 +11,16 @@ import vrp.Problem.Customer;
 import vrp.Problem.Edge;
 import vrp.Problem.Route;
 import vrp.Problem.VehicleRoutingProblem;
+import vrp.heuristics.exchange.Candidate;
+import vrp.heuristics.exchange.Exchange;
+import vrp.heuristics.exchange.RouteExchange;
 
 /**
  *
  * @author David
  */
 public class Heuristic_Exchange extends VRPHeuristic {
-    
+
     /**
      *
      * @param edgeJ
@@ -26,328 +29,392 @@ public class Heuristic_Exchange extends VRPHeuristic {
      * @param customerK_2
      * @return
      */
-    public double tieneAhorro(Edge edgeJ, Customer customerInsertJ, Customer customerK_1, Customer customerK_2){
-          Customer customerJ_1 = edgeJ.getCustomer1();
-          Customer customerJ_2 = edgeJ.getCustomer2();
-         // Customer customerK_1 = edgeK.getCustomer1();
-         // Customer customerK_2 = edgeK.getCustomer2();
-          double distance1_before = edgeJ.getDistance();
-          double distance2_before = getDistanceFromTo(customerK_1, customerInsertJ );
-          double distance3_before = getDistanceFromTo(customerInsertJ, customerK_2 );
-          
-          
-          double suma_before = (distance1_before + distance2_before + distance3_before);
-          
-          
-          double distance1_after = getDistanceFromTo(customerK_1, customerK_2);
-          double distance2_after = getDistanceFromTo(customerJ_1, customerInsertJ);
-          double distance3_after = getDistanceFromTo(customerInsertJ, customerJ_2);
-          double suma_after = (distance1_after + distance2_after + distance3_after);
-          
-         
-          if( suma_after < suma_before )
-             return suma_before - suma_after;
-          else
+    public double tieneAhorro(Edge edgeJ, Customer customerInsertJ, Customer customerK_1, Customer customerK_2) {
+        Customer customerJ_1 = edgeJ.getCustomer1();
+        Customer customerJ_2 = edgeJ.getCustomer2();
+        // Customer customerK_1 = edgeK.getCustomer1();
+        // Customer customerK_2 = edgeK.getCustomer2();
+        double distance1_before = edgeJ.getDistance();
+        double distance2_before = getDistanceFromTo(customerK_1, customerInsertJ);
+        double distance3_before = getDistanceFromTo(customerInsertJ, customerK_2);
+
+        double suma_before = (distance1_before + distance2_before + distance3_before);
+
+        double distance1_after = getDistanceFromTo(customerK_1, customerK_2);
+        double distance2_after = getDistanceFromTo(customerJ_1, customerInsertJ);
+        double distance3_after = getDistanceFromTo(customerInsertJ, customerJ_2);
+        double suma_after = (distance1_after + distance2_after + distance3_after);
+
+        if (suma_after < suma_before) {
+            return suma_before - suma_after;
+        } else {
             return 0;
-         
+        }
+
+    }
+
+    private boolean seemsFeasible(Customer customer, Edge edge) {
+        Customer customerK_1 = edge.getCustomer1();
+        Customer customerK_2 = edge.getCustomer2();
+        double earliestEOSK1 = customerK_1.getTimeWindowStart() + customerK_1.getServiceTime();
+
+        double distanceK1_Cust = getDistanceFromTo(customer, customerK_1);
+        double distanceCust_K2 = getDistanceFromTo(customerK_2, customer);
+        double earliestEOSCust = customer.getTimeWindowStart() + customer.getServiceTime();
+
+        if ((earliestEOSK1 + distanceK1_Cust) > customer.getTimeWindowEnd()) {
+            return false;
+        }
+
+        if ((earliestEOSCust + distanceCust_K2) > customerK_2.getTimeWindowEnd()) {
+            return false;
+        }
+
+        if ((earliestEOSK1 + distanceK1_Cust + customer.getServiceTime() + distanceCust_K2) > customerK_2.getTimeWindowEnd()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean isValidRoute(Route route) {
+
+        double distanceJK = 0;
+        double currentDistance = 0;
+        double currentEndOfService = 0;
+        double waitingTime = 0;
+        double totalDemand = 0;
+        List<Customer> customers = route.getCustomers();
+
+        for (int x = 0; x < customers.size() - 1; x++) {
+
+            Customer customerJ = customers.get(x);
+            Customer customerK = customers.get(x + 1);
+            totalDemand += customerJ.getDemand();
+            
+            distanceJK = getDistanceFromTo(customerJ, customerK);
+            currentDistance = distanceJK + currentEndOfService;
+
+            if (currentDistance >  customerK.getTimeWindowEnd() ) {
+                return false;
+            } else {
+                if ((currentEndOfService + distanceJK) < customerK.getTimeWindowStart()) {
+                    waitingTime = customerK.getTimeWindowStart() - (currentEndOfService + distanceJK);
+                } else {
+                    waitingTime = 0;
+                }
+                currentEndOfService = currentDistance + waitingTime + customerK.getServiceTime();
+            }
+
+        }
+        
+        if(totalDemand > route.getVehicleCapacity())
+            return false;
+                   
+        return true;
     }
     
-    //esPosible(Ruta a la que se le va a incertar, el index del arco en donde se va a insertar, y el cliente a insertar 
-    
-    private boolean esPosible(Route rutaJ, int j, Customer customerCan){
-         
+    private boolean realSavings(Route routeA, Route routeB, Route tempRouteA, Route tempRouteB){
+        double distanceRA = calcDistRoute(routeA);
+        double distanceRB = calcDistRoute(routeB);
+        double distanceTempA = calcDistRoute(tempRouteA);
+        double distanceTempB = calcDistRoute(tempRouteB);
         
-          //Si la capacidad total del vehiculo es excedida por alguna de las nuevas rutas, no es factible hacer el cambio
-          if(rutaJ.getVehicleCapacity() < customerCan.getDemand()){
+        if( (distanceRA + distanceRB) <= (distanceTempA + distanceTempB + 0.001))
             return false;
-          }
-        
-       
-          List<Edge> edgesJ = rutaJ.getEdges(); 
-          Edge sEdgeJ = edgesJ.get(j); 
-          
-          Customer customerJ_1 = sEdgeJ.getCustomer1();
-          Customer customerJ_2 = sEdgeJ.getCustomer2(); 
-          
-          double distanceJK_after = getDistanceFromTo(customerJ_1, customerCan);
-          double distanceKJ_after = getDistanceFromTo(customerCan, customerJ_2);
-          
-          
-          double eoSCustomerJ_1 = sEdgeJ.getEndOfServiceCustomer1(); 
-          
-          if(eoSCustomerJ_1 + distanceJK_after > customerCan.getTimeWindowEnd()){
-              return false;
-          } 
-          else{
-              //En caso de que se pueda llegar a tiempo en ambas rutas, se procede a hacer una revision de cada una, 
-              double wtj; 
-              
-              if((eoSCustomerJ_1 + distanceJK_after) < customerCan.getTimeWindowStart()){
-                  wtj = customerCan.getTimeWindowStart() - (eoSCustomerJ_1 + distanceJK_after);
-                   
-              }else{
-                  wtj = 0;
-              }
-              
-               double eoSCustomerJ_2 = eoSCustomerJ_1 + distanceJK_after + wtj + customerCan.getServiceTime();
-               double wtk = 0;
-               
-               if(eoSCustomerJ_2 + distanceKJ_after > customerJ_2.getTimeWindowEnd()){
-                 return false;
-               } 
-                
-               if((eoSCustomerJ_2 + distanceKJ_after) < customerJ_2.getTimeWindowStart()){
-                 wtk = customerJ_2.getTimeWindowStart() - (eoSCustomerJ_2 + distanceKJ_after);
-               }else{
-                 wtk = 0;
-                }
   
-              if(wtk == 0){
-              //--------------------------------------------------
-              //-----------Ruta J---------------------------------
-              //--------------------------------------------------
+        return true;
+    }
+    
+    private double calcDistRoute(Route route){
+        double totalDistance = 0;
+        List<Customer> customers = route.getCustomers();
+        
+        for(int x = 0 ; x < customers.size()-1; x++){
+            totalDistance += getDistanceFromTo(customers.get(x), customers.get(x+1));
+  
+        }
+        return totalDistance;
+        
+    }
+
+    //esPosible(Ruta a la que se le va a incertar, el index del arco en donde se va a insertar, y el cliente a insertar 
+    private boolean esPosible(Route rutaJ, int j, Customer customerCan) {
+
+        //Si la capacidad total del vehiculo es excedida por alguna de las nuevas rutas, no es factible hacer el cambio
+        if (rutaJ.getVehicleCapacity() < customerCan.getDemand()) {
+            return false;
+        }
+
+        List<Edge> edgesJ = rutaJ.getEdges();
+        Edge sEdgeJ = edgesJ.get(j);
+
+        Customer customerJ_1 = sEdgeJ.getCustomer1();
+        Customer customerJ_2 = sEdgeJ.getCustomer2();
+
+        double distanceJK_after = getDistanceFromTo(customerJ_1, customerCan);
+        double distanceKJ_after = getDistanceFromTo(customerCan, customerJ_2);
+
+        double eoSCustomerJ_1 = sEdgeJ.getEndOfServiceCustomer1();
+
+        if (eoSCustomerJ_1 + distanceJK_after > customerCan.getTimeWindowEnd()) {
+            return false;
+        } else {
+            //En caso de que se pueda llegar a tiempo en ambas rutas, se procede a hacer una revision de cada una, 
+            double wtj;
+
+            if ((eoSCustomerJ_1 + distanceJK_after) < customerCan.getTimeWindowStart()) {
+                wtj = customerCan.getTimeWindowStart() - (eoSCustomerJ_1 + distanceJK_after);
+
+            } else {
+                wtj = 0;
+            }
+
+            double eoSCustomerJ_2 = eoSCustomerJ_1 + distanceJK_after + wtj + customerCan.getServiceTime();
+            double wtk = 0;
+
+            if (eoSCustomerJ_2 + distanceKJ_after > customerJ_2.getTimeWindowEnd()) {
+                return false;
+            }
+
+            if ((eoSCustomerJ_2 + distanceKJ_after) < customerJ_2.getTimeWindowStart()) {
+                wtk = customerJ_2.getTimeWindowStart() - (eoSCustomerJ_2 + distanceKJ_after);
+            } else {
+                wtk = 0;
+            }
+
+            if (wtk == 0) {
+                //--------------------------------------------------
+                //-----------Ruta J---------------------------------
+                //--------------------------------------------------
                 //En esta ruta revisamos los arcos de K desde el arco que se desharia en delante
                 revisionRutaK: //Etiqueta para luego salir del loop
-                for(int temK = j + 1; temK < edgesJ.size() ; temK++){ //Aqui va bien
+                for (int temK = j + 1; temK < edgesJ.size(); temK++) { //Aqui va bien
                     Edge newEdgeK = edgesJ.get(temK);
                     double newEOS1 = (eoSCustomerJ_2 + distanceKJ_after) + wtk + newEdgeK.getCustomer1().getServiceTime();
-                    if(newEOS1 + newEdgeK.getDistance() > newEdgeK.getCustomer2().getTimeWindowEnd()){
+                    if (newEOS1 + newEdgeK.getDistance() > newEdgeK.getCustomer2().getTimeWindowEnd()) {
                         //*********************************** En caso de que alguna ventana de tiempo se viole
                         return false;
-                    }else{
-                        if(newEdgeK.getCustomer2().getTimeWindowStart() > newEOS1 + newEdgeK.getDistance()){
-                            wtk = newEdgeK.getCustomer2().getTimeWindowStart()  - (newEOS1 + newEdgeK.getDistance());
+                    } else {
+                        if (newEdgeK.getCustomer2().getTimeWindowStart() > newEOS1 + newEdgeK.getDistance()) {
+                            wtk = newEdgeK.getCustomer2().getTimeWindowStart() - (newEOS1 + newEdgeK.getDistance());
                             break revisionRutaK;
-                        }else{
+                        } else {
                             wtk = 0;
                         }
-                        
+
                         eoSCustomerJ_2 = newEOS1;
                         distanceKJ_after = newEdgeK.getDistance();
 
                     }
                 }
-              
-              }
-            } 
+
+            }
+        }
         return true;
- 
-      }
+
+    }
 
     @Override
     public int getNextElement(VehicleRoutingProblem problem) {
- 
+
         int capacity = problem.getCapacity();
         Customer depot = problem.getDepot();
         List<Route> routes = problem.getRoutes();
-         
-        ListIterator<Route> iteratorRoutes;
-        iteratorRoutes = routes.listIterator();
-        routes.listIterator();
-        
-        
-        //--Info necesaria para hacer el movimiento 
-        Route routeJ_rel = null;
-        int indexEdgeJ_rel = 0 ;
-        Route routeK_rel = null;
-        int indexCustomerK_rel = 0; 
-        //------------------------
-         
-        double ahorro = 0;
-        //En este caso es mejor irnos ruta por ruta, revisando en cada ruta si sus clientes pueden ponerse en los arcos de las rutas siguientes
-        //O tambien si los clientes de las otras rutas pueden agregarse a alguno de sus arcos 
-        for(int x = 0 ; x < routes.size(); x++){
-            Route rutaA = routes.get(x);
-            List<Edge> arcos = rutaA.getEdges();
-            List<Customer> clientes = rutaA.getCustomers();
-            
-            for(int xe=0;xe < arcos.size(); xe++){
-                Edge edgeCan = arcos.get(xe);
-                
-                for(int x2 = (x+1); x2<routes.size(); x2 ++){
-                    Route rutaB = routes.get(x2);
-                    List<Customer> clientesCand = rutaB.getCustomers();
-                    
-                    for(int xc2=1;xc2 <(clientesCand.size() - 1)  ; xc2++){
-                        Customer customerCan = clientesCand.get(xc2);
-                        double ahorroCan = tieneAhorro(edgeCan,customerCan, clientesCand.get(xc2-1), clientesCand.get(xc2+1) );
-                        if( ahorroCan > 0){ 
-                            //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility 
-                            if( esPosible(rutaA, xe, customerCan) ){ 
-                                if( ahorroCan > ahorro){
-                                    ahorro = ahorroCan; 
-                                     routeJ_rel = rutaA;
-                                     indexEdgeJ_rel = xe;
-                                     routeK_rel = rutaB;
-                                     indexCustomerK_rel = xc2 ;
-                                     
-                                      esPosible(rutaA, xe, customerCan);
-                                }
-                                //Entonces se guardan todos los parametros para hacer el cambio despues 
+        Exchange exchange = new Exchange();
+
+        //Recorremos todas las rutas
+        for (int routeAIndex = 0; routeAIndex < routes.size(); routeAIndex++) {
+
+            Route routeA = routes.get(routeAIndex);
+            List<Customer> customersA = routeA.getCustomers();
+            List<Edge> edgesA = routeA.getEdges();
+            RouteExchange routeEx = new RouteExchange(routeAIndex, routeA.getVehicleCapacity(), capacity);
+            exchange.getRoutes().add(routeEx);
+
+            //Recorremos todos los clientes de la rutaA, viendo en que arco de las otras rutas puede ser insertado
+            for (int customerAIndex = 1; customerAIndex < customersA.size() - 1; customerAIndex++) {
+                Customer customerA = customersA.get(customerAIndex);
+
+                for (int routeBIndex = routeAIndex + 1; routeBIndex < routes.size(); routeBIndex++) {
+                    Route routeB = routes.get(routeBIndex);
+                    List<Edge> edgesB = routeB.getEdges();
+
+                    for (int edgeBIndex = 0; edgeBIndex < edgesB.size(); edgeBIndex++) {
+                        Edge edgeB = edgesB.get(edgeBIndex);
+
+                        if (seemsFeasible(customerA, edgeB)) {
+                            Customer customerA_1 = customersA.get(customerAIndex - 1);
+                            Customer customerA_2 = customersA.get(customerAIndex + 1);
+                            Double savings = tieneAhorro(edgeB, customerA, customerA_1, customerA_2);
+                            if (savings > 0) {
+                                Candidate candidateA = new Candidate(true, routeAIndex, routeBIndex, customerAIndex, (int) customerA.getDemand(), edgeBIndex, savings);
+                                exchange.getCandidates().add(candidateA);
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+
+            //Recorremos todos los arcos de la rutaA, viendo cual cliente de las otras rutas puede ser insertado 
+            for (int edgeAIndex = 0; edgeAIndex < edgesA.size(); edgeAIndex++) {
+                Edge edgeA = edgesA.get(edgeAIndex);
+
+                for (int routeBIndex = routeAIndex + 1; routeBIndex < routes.size(); routeBIndex++) {
+                    Route routeB = routes.get(routeBIndex);
+                    List<Customer> customersB = routeB.getCustomers();
+                    for (int customerBIndex = 1; customerBIndex < customersB.size() - 1; customerBIndex++) {
+                        Customer customerB = customersB.get(customerBIndex);
+
+                        if (seemsFeasible(customerB, edgeA)) {
+                            Customer customerB_1 = customersB.get(customerBIndex - 1);
+                            Customer customerB_2 = customersB.get(customerBIndex + 1);
+                            Double savings = tieneAhorro(edgeA, customerB, customerB_1, customerB_2);
+                            if (savings > 0) {
+                                Candidate candidateB = new Candidate(true, routeBIndex, routeAIndex, customerBIndex, (int) customerB.getDemand(), edgeAIndex, savings);
+                                exchange.getCandidates().add(candidateB);
+
                             }
                         }
                     }
-                    
+
                 }
-                
-                
+
             }
-            
-            for(int xc=1; xc< clientes.size()-1; xc++ ){
-                Customer customerCan = clientes.get(xc);
+
+        }
+
+       // System.out.println(exchange.toString());
+        boolean onegood = false;
+
+        while (exchange.existActive()) {
+
+            int candidateIndex = exchange.getMaxActive();
+            Candidate candidate = exchange.getCandidates().get(candidateIndex);
+
+            List<Candidate> listPossible = exchange.getBackCandidates(candidate);
+          //  listPossible.sort((Candidate object1, Candidate object2) -> {                return (int) (object2.getSavings() - object1.getSavings());    });
+            Route tempRouteA = new Route(depot, capacity);
+            Route tempRouteB = new Route(depot, capacity);
+
+            while (!listPossible.isEmpty()) {
+                Candidate candidateB = listPossible.get(0);
+                Route routeB = routes.get(candidateB.getRouteOrigin());
+                Route routeA = routes.get(candidate.getRouteOrigin());
+
+                tempRouteA.getCustomers().clear();
+                tempRouteB.getCustomers().clear();
                 
-                for(int x2 = (x+1); x2<routes.size(); x2 ++){
-                    Route rutaB = routes.get(x2);
-                    List<Edge> edgesCan = rutaB.getEdges();
-                    
-                    for(int xe=0;xe <(edgesCan.size() - 1)  ; xe++){
-                        Edge edgeCan = edgesCan.get(xe);
-                        double ahorroCan = tieneAhorro(edgeCan,customerCan, clientes.get(xc-1), clientes.get(xc+1) );
-                        if( ahorroCan > 0){
-                               //Guardar cuanto ahorro tiene Y en caso de ser Mayor que el anterior guardado, revisamos feasibility
-                            if( esPosible(rutaB, xe, customerCan) ){
-                                if( ahorroCan > ahorro){
-                                    ahorro = ahorroCan;
-                                    
-                                    //Tenemos que guardar La ruta a al que se le va a agregar el cliente, y su arco,
-                                    //Guardar la ruta donde se va a quitar el cliente, el cliente y los arcos que se van a remover
-                                     routeJ_rel = rutaB;
-                                     indexEdgeJ_rel = xe;
-                                     routeK_rel = rutaA;
-                                     indexCustomerK_rel = xc ;
-                                     
-                                     esPosible(rutaB, xe, customerCan);
-                                }
-                                //Entonces se guardan todos los parametros para hacer el cambio despues 
-                            }
-                        }
-                        
+                tempRouteA.getCustomers().addAll(routeA.getCustomers());
+                tempRouteB.getCustomers().addAll(routeB.getCustomers());
+                
+
+                tempRouteA.getCustomers().add(candidateB.getEdge() + 1, routeB.getCustomers().get(candidateB.getCustomer()));
+                tempRouteB.getCustomers().add(candidate.getEdge() + 1, routeA.getCustomers().get(candidate.getCustomer()));
+
+                if (candidate.getCustomer() <= candidateB.getEdge()) {
+                    tempRouteA.getCustomers().remove(candidate.getCustomer());
+                } else {
+                    tempRouteA.getCustomers().remove(candidate.getCustomer() + 1);
+                }
+                if (candidateB.getCustomer() <= candidate.getEdge()) {
+                    tempRouteB.getCustomers().remove(candidateB.getCustomer());
+                } else {
+                    tempRouteB.getCustomers().remove(candidateB.getCustomer() + 1);
+                }
+
+     //           if(realSavings(routeA,routeB,tempRouteA,tempRouteB)){
+                
+                
+                if (isValidRoute(tempRouteA) && isValidRoute(tempRouteB) && realSavings(routeA,routeB,tempRouteA,tempRouteB)) {
+                    onegood = true;
+                    break;
+                } 
+      //          }
+                else {
+                    listPossible.remove(0);
+                }
+
+            }
+
+            if (!onegood) {
+                // exchange.getCandidates().get(candidateIndex).setActive(false);
+                candidate.setActive(false);
+            } else {
+
+                if (candidate.getRouteDestiny() > candidate.getRouteOrigin()) {
+                    problem.getRoutes().remove(candidate.getRouteDestiny());
+                    problem.getRoutes().remove(candidate.getRouteOrigin());
+
+                } else {
+                    problem.getRoutes().remove(candidate.getRouteOrigin());
+                    problem.getRoutes().remove(candidate.getRouteDestiny());
+
+                }
+
+                tempRouteA.getEdges().clear();
+
+                double distance = 0;
+                double eos = 0;
+                double waitingTime = 0;
+                double distanceRoute = 0;
+                for (int i = 0; i < (tempRouteA.getCustomers().size() - 1); i++) {
+                    Customer customer1 = tempRouteA.getCustomers().get(i);
+                    Customer customer2 = tempRouteA.getCustomers().get(i + 1);
+                    distance = getDistanceFromTo(customer1, customer2);
+
+                    if (customer2.getTimeWindowStart() > (distance + eos)) {
+                        waitingTime = customer2.getTimeWindowStart() - (distance + eos);
+                    } else {
+                        waitingTime = 0;
                     }
-                    
-                    
+
+                    //Customer 1 ,  customer 2, ruta, demanda (del cliente2), distancia, end of service cliente 1 , tiempo de espera para cliente 2
+                    Edge edge = new Edge(customer1, customer2, tempRouteA, customer2.getDemand(), distance, eos, waitingTime);
+                    tempRouteA.getEdges().add(edge);
+                    eos = eos + distance + waitingTime + customer2.getServiceTime();
+                    distanceRoute += distance;
                 }
-                
+                tempRouteA.setDistance(distanceRoute);
+
+                tempRouteB.getEdges().clear();
+
+                double distanceB = 0;
+                double eosB = 0;
+                double waitingTimeB = 0;
+                double distanceRouteB = 0;
+                for (int i = 0; i < (tempRouteB.getCustomers().size() - 1); i++) {
+                    Customer customer1 = tempRouteB.getCustomers().get(i);
+                    Customer customer2 = tempRouteB.getCustomers().get(i + 1);
+                    distanceB = getDistanceFromTo(customer1, customer2);
+
+                    if (customer2.getTimeWindowStart() > (distanceB + eosB)) {
+                        waitingTimeB = customer2.getTimeWindowStart() - (distanceB + eosB);
+                    } else {
+                        waitingTimeB = 0;
+                    }
+
+                    //Customer 1 ,  customer 2, ruta, demanda (del cliente2), distancia, end of service cliente 1 , tiempo de espera para cliente 2
+                    Edge edge = new Edge(customer1, customer2, tempRouteB, customer2.getDemand(), distanceB, eosB, waitingTimeB);
+                    tempRouteB.getEdges().add(edge);
+                    eosB = eosB + distanceB + waitingTimeB + customer2.getServiceTime();
+                    distanceRouteB += distanceB;
+                }
+                tempRouteB.setDistance(distanceRouteB);
+
+                problem.getRoutes().add(tempRouteB);
+                problem.getRoutes().add(tempRouteA);
+                return 1;
+
             }
-            
-        } 
-            
-            //Se revisa que se haya encontrado algun arco y se toma el mejor encontrado.
-            //Despues se realiza el cambio y se reajustan ambas rutas que se modificaron.
-            
-            //return 1 si se encontro algun 
-            //return 0 si no se encuentra nada 
-       
-       if(ahorro > 0){
-           
-           //Arreglamos la ruta donde se agrega el cliente
-           
-          List<Customer> listaCustomersK = routeK_rel.getCustomers();
-          Customer customerK_rel = listaCustomersK.get(indexCustomerK_rel);
-          
-          List<Edge> listaArcosJ = routeJ_rel.getEdges();
-          Edge arcoJ_rel = listaArcosJ.get(indexEdgeJ_rel); 
-          
-          double distanceJ_K_rel = getDistanceFromTo(customerK_rel, arcoJ_rel.getCustomer1());
-          double distanceK_J_rel = getDistanceFromTo(customerK_rel, arcoJ_rel.getCustomer2());
-          
-          double eosCJ = arcoJ_rel.getEndOfServiceCustomer1();
-          
-          double wtj; 
-          if((eosCJ + distanceJ_K_rel) < customerK_rel.getTimeWindowStart()){
-            wtj = customerK_rel.getTimeWindowStart() - (eosCJ + distanceJ_K_rel);         
-          }else{
-            wtj = 0;
-          }
-          double eosCK = eosCJ + wtj + distanceJ_K_rel + customerK_rel.getServiceTime();
-          
-          double wtk; 
-          if((eosCK + distanceK_J_rel) < arcoJ_rel.getCustomer2().getTimeWindowStart()){
-            wtk = arcoJ_rel.getCustomer2().getTimeWindowStart() - (eosCK + distanceK_J_rel);         
-          }else{
-            wtk = 0;
-          }     
-           Edge tempEdge1 = new Edge(arcoJ_rel.getCustomer1(), customerK_rel, routeJ_rel, customerK_rel.getDemand(), distanceJ_K_rel, eosCJ, wtj);
-          
-           Edge tempEdge2 = new Edge(customerK_rel, arcoJ_rel.getCustomer2(), routeJ_rel, arcoJ_rel.getCustomer2().getDemand(), distanceK_J_rel, eosCK, wtk);
-           
-           listaArcosJ.remove(indexEdgeJ_rel);
-           listaArcosJ.add(indexEdgeJ_rel, tempEdge2);
-           listaArcosJ.add(indexEdgeJ_rel, tempEdge1);
-           //listaCustomersJ.add(indexEdgeJ_rel + 1, customerK_rel);
-           routeJ_rel.insertCustomerAt(customerK_rel , indexEdgeJ_rel + 1); 
-           
-           double newEosCJ = tempEdge2.getEndOfServiceCustomer1()+ tempEdge2.getDistance() + tempEdge2.getWaitingTime() + tempEdge2.getCustomer2().getServiceTime();
-           
-           for( int m = indexEdgeJ_rel +2 ; m < listaArcosJ.size(); m++){
-              Edge someE = listaArcosJ.get(m);
-              someE.setEndOfServiceCustomer1(newEosCJ);
-              double newWtJ;
-              if((newEosCJ + someE.getDistance()) < someE.getCustomer2().getTimeWindowStart()){
-                newWtJ = someE.getCustomer2().getTimeWindowStart() - (newEosCJ + someE.getDistance());         
-              }else{
-                newWtJ = 0;
-              }  
-              someE.setWaitingTime(newWtJ);
-              newEosCJ = newEosCJ + newWtJ + someE.getDistance() + someE.getCustomer2().getServiceTime();
-           }
-           
-           
-           //Arreglamos la ruta a la que se le quita el cliente
- 
-           List<Edge> listaArcosK = routeK_rel.getEdges();
-           Edge arcoK1 = listaArcosK.get(indexCustomerK_rel - 1);
-           Edge arcoK2 = listaArcosK.get(indexCustomerK_rel);
-           
-           double newDistanceK = getDistanceFromTo(arcoK1.getCustomer1(), arcoK2.getCustomer2());
-           double distSav = arcoK1.getDistance() + arcoK2.getDistance() - newDistanceK;
-           double newWtk;
-           double eoSC1 = arcoK1.getEndOfServiceCustomer1();
-           if((eoSC1 + newDistanceK) < arcoK2.getCustomer2().getTimeWindowStart() ){
-               newWtk = arcoK2.getCustomer2().getTimeWindowStart() - arcoK2.getCustomer2().getTimeWindowStart() ;
-           }else{
-               newWtk = 0;
-           }
-           Edge newArcoK = new Edge(arcoK1.getCustomer1(), arcoK2.getCustomer2(), routeK_rel, arcoK2.getDemand(), newDistanceK, eoSC1, newWtk);
-           
-           listaArcosK.remove(arcoK1);
-           listaArcosK.remove(arcoK2);
-           listaArcosK.add(indexCustomerK_rel -1, newArcoK);
-           
-           routeK_rel.getCustomers().remove(customerK_rel);
-           routeK_rel.setDistance(routeK_rel.getDistance() - distSav);
-           routeK_rel.setDemand(routeK_rel.getDemand() - customerK_rel.getDemand());
-           routeK_rel.setVehicleCapacity(routeK_rel.getVehicleCapacity() + (int)customerK_rel.getDemand());
-           
-           double newEosCK = eoSC1 + newDistanceK + newWtk + newArcoK.getCustomer2().getServiceTime();
-           
-           for( int m = indexCustomerK_rel -1 ; m < listaArcosK.size(); m++){
-              Edge someE = listaArcosK.get(m);
-              someE.setEndOfServiceCustomer1(newEosCK);
-              double newWtK;
-              if((newEosCK + someE.getDistance()) < someE.getCustomer2().getTimeWindowStart()){
-                newWtK = someE.getCustomer2().getTimeWindowStart() - (newEosCK + someE.getDistance());         
-              }else{
-                newWtK = 0;
-              }  
-              someE.setWaitingTime(newWtK);
-              newEosCK = newEosCK + newWtK + someE.getDistance() + someE.getCustomer2().getServiceTime();
-           }        
-           
-         
-                       
-            if(routeK_rel.getEdges().size() == 1)
-                problem.getRoutes().remove(routeK_rel);
-            
-           
-           
-            //System.out.println("doneChange");
-            return 1;
-       }else{
-          // System.out.println("Ningun cambio posible");
-            return 0;
-       }
-   
-       
+
+        }
+
+        return 0;
 
     }
 
@@ -365,77 +432,76 @@ public class Heuristic_Exchange extends VRPHeuristic {
         return distance;
 
     }
-    
-      /*
-  private boolean checkFeasibility(  List<Edge> edges, int index, Customer customer){
-      
-      Edge newEdge = edges.get(index);
-      
-      //bj es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
-      double bj = newEdge.getEndOfServiceCustomer1()+newEdge.getDistance()+newEdge.getWaitingTime();
-      
-      double distance1 = getDistanceFromTo(customer, newEdge.getCustomer1());
-      double distance2 = getDistanceFromTo(customer, newEdge.getCustomer2());
-      double wT1 = 0;
-      
-      if(newEdge.getEndOfServiceCustomer1()+distance1 > customer.getTimeWindowStart()){
-          wT1 =0;
-      }else{
-          wT1 =customer.getTimeWindowStart() - (newEdge.getEndOfServiceCustomer1()+distance1);
-      }
-      double bu = newEdge.getEndOfServiceCustomer1()+distance1  + wT1;
-      double eoSu = bu + customer.getServiceTime();
-      
-      double wT2 = 0;
-      
-      if(eoSu + distance2 > newEdge.getCustomer2().getTimeWindowStart()){
-          wT2 = 0;
-      }else{
-          wT2 = newEdge.getCustomer2().getTimeWindowStart() - (eoSu + distance2 );
-      }
-      
-      //bju es el nuevo tiempo en que iniciaria el servicio en el cliente dos, si se agrega antes el cliente u
-      double bju = eoSu + distance2 +wT2;
-              
-      //Se necesita definir el push forfard
-      double pushForward = bju - bu;
-      ListIterator<Edge> iterator;
-      iterator = edges.listIterator();
-      int counter  = -1;
-      
-      if( bju > newEdge.getCustomer2().getTimeWindowEnd()  || bu > customer.getTimeWindowEnd() ){
-          return false;
-      }else{
-            while(iterator.hasNext()){
-                  counter++;
-                  newEdge = iterator.next();
-                  if(counter > index){
-                    //  pushForward = pushForward - newEdge.getWaitingTime();
-                      
-                      if(pushForward > newEdge.getWaitingTime()){
-                       
-                         double twend =  newEdge.getCustomer2().getTimeWindowEnd();
-                         double dist = newEdge.getDistance();
-                         double servi = newEdge.getEndOfServiceCustomer1();
-                         pushForward = pushForward - newEdge.getWaitingTime();
-                         
-                         if((servi + dist + pushForward) <= twend ){
-                             return true;
-                         }else{
-                             return false;
-                         }
-                      }else{
-                          return true;
-                      }
-                   }
-                  
-              }
-               
-            return true;    
-      }
-     
-  }
-    
-    */
 
+    /*
+     private boolean checkFeasibility(  List<Edge> edges, int index, Customer customer){
+      
+     Edge newEdge = edges.get(index);
+      
+     //bj es el tiempo en el que comenzaba originalmente el servicio del cliente 2 en el arco seleccionado para insercion
+     double bj = newEdge.getEndOfServiceCustomer1()+newEdge.getDistance()+newEdge.getWaitingTime();
+      
+     double distance1 = getDistanceFromTo(customer, newEdge.getCustomer1());
+     double distance2 = getDistanceFromTo(customer, newEdge.getCustomer2());
+     double wT1 = 0;
+      
+     if(newEdge.getEndOfServiceCustomer1()+distance1 > customer.getTimeWindowStart()){
+     wT1 =0;
+     }else{
+     wT1 =customer.getTimeWindowStart() - (newEdge.getEndOfServiceCustomer1()+distance1);
+     }
+     double bu = newEdge.getEndOfServiceCustomer1()+distance1  + wT1;
+     double eoSu = bu + customer.getServiceTime();
+      
+     double wT2 = 0;
+      
+     if(eoSu + distance2 > newEdge.getCustomer2().getTimeWindowStart()){
+     wT2 = 0;
+     }else{
+     wT2 = newEdge.getCustomer2().getTimeWindowStart() - (eoSu + distance2 );
+     }
+      
+     //bju es el nuevo tiempo en que iniciaria el servicio en el cliente dos, si se agrega antes el cliente u
+     double bju = eoSu + distance2 +wT2;
+              
+     //Se necesita definir el push forfard
+     double pushForward = bju - bu;
+     ListIterator<Edge> iterator;
+     iterator = edges.listIterator();
+     int counter  = -1;
+      
+     if( bju > newEdge.getCustomer2().getTimeWindowEnd()  || bu > customer.getTimeWindowEnd() ){
+     return false;
+     }else{
+     while(iterator.hasNext()){
+     counter++;
+     newEdge = iterator.next();
+     if(counter > index){
+     //  pushForward = pushForward - newEdge.getWaitingTime();
+                      
+     if(pushForward > newEdge.getWaitingTime()){
+                       
+     double twend =  newEdge.getCustomer2().getTimeWindowEnd();
+     double dist = newEdge.getDistance();
+     double servi = newEdge.getEndOfServiceCustomer1();
+     pushForward = pushForward - newEdge.getWaitingTime();
+                         
+     if((servi + dist + pushForward) <= twend ){
+     return true;
+     }else{
+     return false;
+     }
+     }else{
+     return true;
+     }
+     }
+                  
+     }
+               
+     return true;    
+     }
+     
+     }
+    
+     */
 }

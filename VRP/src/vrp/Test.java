@@ -24,6 +24,7 @@ import vrp.Solvers.Problem_Analizer;
 import vrp.Solvers.Solution_Tester;
 import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_CWDT;
+import vrp.heuristics.Heuristic_Exchange;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
 import vrp.heuristics.Heuristic_PartialReset;
@@ -153,9 +154,15 @@ public class Test {
         Heuristic_PartialReset part = new Heuristic_PartialReset();
         Heuristic_RandomReset ranr = new Heuristic_RandomReset();
         Heuristic_SelectiveReset selR = new Heuristic_SelectiveReset();
+        Heuristic_Exchange exch = new Heuristic_Exchange();
+        
+        
         Solution_Tester tester = new Solution_Tester();
         Problem_Analizer pAnal = new Problem_Analizer();
         VehicleRoutingProblem problem ;
+        
+        
+        Heuristic_Exchange exchange = new Heuristic_Exchange();
         
         Heuristic_RelocateIntraRoute relocateIntra = new Heuristic_RelocateIntraRoute();
  
@@ -257,6 +264,7 @@ public class Test {
              while(relocateIntra.getNextElement(problem) ==1 ){}
              while(opt.getNextElement(problem) ==1){}
              while(relocateIntra.getNextElement(problem) ==1 ){}
+             while (exch.getNextElement(problem) == 1){}
              
              selR.getNextElement(problem);
              while ( nearestN.getNextElement(problem) == 1){}
@@ -320,6 +328,7 @@ public class Test {
              while(relocateIntra.getNextElement(problem) ==1 ){}
              while(opt.getNextElement(problem) ==1){}
              while(relocateIntra.getNextElement(problem) ==1 ){}
+             while (exch.getNextElement(problem) == 1){}
              
              selR.getNextElement(problem);
              while ( i1.getNextElement(problem) == 1){}
@@ -828,6 +837,7 @@ public class Test {
              while(relocateIntra.getNextElement(problem) ==1 ){}
              while(opt.getNextElement(problem) ==1){}
              while(relocateIntra.getNextElement(problem) ==1 ){}
+             while (exch.getNextElement(problem) == 1){}
              
              selR.getNextElement(problem);
              while ( nearestN.getNextElement(problem) == 1){}
@@ -891,6 +901,7 @@ public class Test {
              while(relocateIntra.getNextElement(problem) ==1 ){}
              while(opt.getNextElement(problem) ==1){}
              while(relocateIntra.getNextElement(problem) ==1 ){}
+             while (exch.getNextElement(problem) == 1){}
              
              selR.getNextElement(problem);
              while ( i1.getNextElement(problem) == 1){}
@@ -960,6 +971,8 @@ public class Test {
               while(relocate.getNextElement(problem) ==1){}
              while(relocateIntra.getNextElement(problem) ==1 ){}
              while(opt.getNextElement(problem) ==1){}
+             while (exch.getNextElement(problem) == 1){}
+             
              
              System.out.println(problem.toString());
        //     part.getNextElement(problem);

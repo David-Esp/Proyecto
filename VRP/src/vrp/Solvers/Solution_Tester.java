@@ -41,10 +41,10 @@ public class Solution_Tester {
             double currentTimeEndOfService = 0;
             double waitingTime = 0;
             double distanceIJ = 0;
-            int contador  = -1;
+            
             
             while (iteratorA.hasNext()){
-                contador ++;
+                 
                 edge = iteratorA.next();
                 
                 distanceIJ = getDistanceFromTo(edge.getCustomer1(), edge.getCustomer2()) ;

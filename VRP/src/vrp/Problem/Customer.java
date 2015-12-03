@@ -11,17 +11,15 @@ import java.util.List;
  *
  * @author David
  */
-public class Customer {
+ public class Customer {
     
     private int number;
     private double xCoord;
     private double yCoord;
-    private double demand;
-    
-    private int serviceTime;  //How long it takes to complete the service
-    
-    private int timeWindowStart;  //Ready Time
-    private int timeWindowEnd;   //Due date
+    private double demand; 
+    private int serviceTime;            //Tiempo que dura el servicio
+    private int timeWindowStart;        //Ready Time
+    private int timeWindowEnd;          //Due date
     
     
     private boolean isTimeWindowFlexible;

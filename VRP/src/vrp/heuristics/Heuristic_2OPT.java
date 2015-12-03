@@ -225,7 +225,7 @@ public class Heuristic_2OPT extends VRPHeuristic{
                     for(int k = 0; k< cantEdgesK ; k++){
                         edgeK = edgesK.get(k);
                         
-                        //Puta la wea
+                         
                         //revisamos si el intercambio nos traeria algun beneficio
                         double candSavings = haveSavings(edgeJ, edgeK);
                         if(candSavings > savings){

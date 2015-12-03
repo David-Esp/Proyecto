@@ -52,13 +52,13 @@ public class Heuristic_RelocateIntraRoute extends VRPHeuristic {
          
     }
     
-    //esPosible(Ruta a la que se le va a incertar, el index del arco en donde se va a insertar, y el cliente a insertar 
+    //esPosible(Ruta a la que se le va a insertar, el index del arco en donde se va a insertar, y el cliente a insertar 
     
     private boolean esPosible(Route routeJ, Edge edgeCan, int indexEdge, Customer customerCan, int indexCustomer){
           
         List<Edge> edgesJ = routeJ.getEdges();
         
-        
+         
         if(indexCustomer < indexEdge){
             
             Edge edgeJ1 = edgesJ.get(indexCustomer -1);
@@ -150,52 +150,7 @@ public class Heuristic_RelocateIntraRoute extends VRPHeuristic {
             return false;
         }
         
-        
-        /*
-        
-        
-          List<Edge> edgesJ = rutaJ.getEdges(); 
-          Edge sEdgeJ = edgesJ.get(j); 
-          
-          Customer customerJ_1 = sEdgeJ.getCustomer1();
-          Customer customerJ_2 = sEdgeJ.getCustomer2(); 
-          
-          double distanceJK_after = getDistanceFromTo(customerJ_1, customerCan);
-          double distanceKJ_after = getDistanceFromTo(customerCan, customerJ_2);
-          
-          
-          double eoSCustomerJ_1 = sEdgeJ.getEndOfServiceCustomer1(); 
-          
-          if(eoSCustomerJ_1 + distanceJK_after > customerCan.getTimeWindowEnd()){
-              return false;
-          } 
-          else{
-              //En caso de que se pueda llegar a tiempo en ambas rutas, se procede a hacer una revision de cada una, 
-              double wtj; 
-              
-              if((eoSCustomerJ_1 + distanceJK_after) < customerCan.getTimeWindowStart()){
-                  wtj = customerCan.getTimeWindowStart() - (eoSCustomerJ_1 + distanceJK_after);
-                   
-              }else{
-                  wtj = 0;
-              }
-              
-               double eoSCustomerJ_2 = eoSCustomerJ_1 + distanceJK_after + wtj + customerCan.getServiceTime();
-               double wtk = 0;
-               
-               if(eoSCustomerJ_2 + distanceKJ_after > customerJ_2.getTimeWindowEnd()){
-                 return false;
-               } 
-                
-               if((eoSCustomerJ_2 + distanceKJ_after) < customerJ_2.getTimeWindowStart()){
-                 wtk = customerJ_2.getTimeWindowStart() - (eoSCustomerJ_2 + distanceKJ_after);
-               }else{
-                 wtk = 0;
-                }
-   
-            } 
-        return true;
- */
+       
       }
 
     @Override

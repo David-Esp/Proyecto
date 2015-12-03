@@ -13,16 +13,16 @@ import java.util.ListIterator;
  *
  * @author David
  */
-public class Route {
+  public class Route {
     
-    private double distance;
+    private double distance;              //Distancia total de la ruta 
+    private double demand;                //Demanda total de los clientes en la ruta 
+    private List<Customer> customers;     //Lista de los clientes de la ruta
+    private List<Edge> edges;             //Lista de los arcos que conforman la ruta
+    
+    private int vehicleCapacity; //Capacidad del vehiculo
+    
     private int time;
-    private double demand;
-    private int vehicleCapacity;
-    private List<Customer> customers;
-    private List<Edge> edges;
-    
-    
        /**
      *
      * @param depot

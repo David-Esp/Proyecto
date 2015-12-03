@@ -11,20 +11,21 @@ import java.util.List;
  *
  * @author David
  */
-public class Edge {
+  public class Edge {
     
     //Distancia que existe entre los clientes
-    private double distance;
-    private Route route;
-
-
-  
-    private double demand;
+    private double distance; 
     //Clientes que se unen por este arco
     private Customer customer1, customer2;
+    //Tiempo en que el cliente 1 termina su servicio
     private double endOfServiceCustomer1;
+    //Tiempo de espera al llegar al cliente 2
     private double waitingTime;
-
+    
+    
+    //Ruta a la que pertenece el arco
+    private Route route;
+    private double demand;
     /**
      *
      * @return

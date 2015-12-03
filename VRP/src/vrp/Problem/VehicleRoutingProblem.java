@@ -17,12 +17,14 @@ import java.util.ListIterator;
 import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_CWDT;
 import vrp.heuristics.Heuristic_CompleteReset;
+import vrp.heuristics.Heuristic_Exchange;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
 import vrp.heuristics.Heuristic_PartialReset;
 import vrp.heuristics.Heuristic_RandomReset;
 import vrp.heuristics.Heuristic_Relocate;
 import vrp.heuristics.Heuristic_RelocateIntraRoute;
+import vrp.heuristics.Heuristic_SelectiveReMake;
 import vrp.heuristics.Heuristic_SelectiveReset;
 import vrp.heuristics.VRPHeuristic;
 
@@ -348,7 +350,7 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
                  * In this case the featuere and heuristic manager are implemented by this class.
                  */
                 heuristic = (VRPHeuristic) selector.getHeuristic(this, this);
-                System.out.println(" " + heuristic + " coin = " + coin);
+                // System.out.println(" " + heuristic + " coin = " + coin);
             } catch (NoSuchFeatureException | NoSuchHeuristicException e) {
                 System.out.println(e);
                 System.out.println("The system will halt.");
@@ -387,9 +389,11 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
             case "DIS":
                 return CalculateDistance(this);
             case "BED":
-                return getBigEdges(this)/200;
+                return getBigEdges(this);
             case "BRO":
-                return getSomething(this)/25;
+                return getBigRoutes(this);
+            case "CLOSE":
+                return getCloseness(this);
             default:
                 throw new NoSuchFeatureException(featureName);
         }
@@ -422,14 +426,18 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
                 return new Heuristic_Relocate();
             case "RELINTRA":
                 return new Heuristic_RelocateIntraRoute();
+            case "EXCHANGE":
+                return new Heuristic_Exchange();
             case "SELR":
                 return new Heuristic_SelectiveReset();
+            case "REMAKE":
+                return new Heuristic_SelectiveReMake();
             default:
                 throw new NoSuchHeuristicException(heuristicName);
         }
     }
 
-    public static double getSomething(VehicleRoutingProblem problem) {
+    public static double getBigRoutes(VehicleRoutingProblem problem) {
         //int x = problem.getRoutes().size();
         List<Route> routes = problem.getRoutes();
         int x = routes.size();
@@ -514,7 +522,7 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
 
             for (int xx = 0; xx < edgs.size(); xx++) {
                 Edge ed = edgs.get(xx);
-                if (ed.getDistance() > (distances[y][2] + 5)) {
+                if (ed.getDistance() > (distances[y][2] + 2)) {
                     rules.add(xx);
                 }
             }
@@ -522,6 +530,35 @@ public class VehicleRoutingProblem implements FeatureManager, HeuristicManager {
         }
 
         return rules.size();
+    }
+
+    public static double getCloseness(VehicleRoutingProblem problem) {
+
+        List<Route> routes = problem.getRoutes();
+        int x = routes.size();
+        double[][] distances = new double[x][3];
+        double totalDistance = 0;
+        double averageDistance = 0;
+        double routeDistance = 0;
+          double averageEdgeDist = 0;
+        for (int i = 0; i < x; i++) {
+            Route routeX = routes.get(i);
+
+            List<Edge> edges = routeX.getEdges();
+            int cantE = edges.size();
+            double maxEdge = 0;
+            for (int d = 0; d < cantE; d++) {
+
+                Edge edge = edges.get(d);
+
+                routeDistance += edge.getWaitingTime();
+            }
+            averageEdgeDist = routeDistance / cantE;
+
+        }
+
+       // return routeDistance;
+        return averageEdgeDist;
     }
 
 }

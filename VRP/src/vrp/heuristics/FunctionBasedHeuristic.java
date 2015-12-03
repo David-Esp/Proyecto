@@ -28,14 +28,16 @@ public class FunctionBasedHeuristic extends VRPHeuristic {
     
     @Override
     public int getNextElement(VehicleRoutingProblem problem) {                
-        List<WeightedElement> weightedVariables;            
-        if (problem.getSequenceA().isEmpty()) {
+        List<WeightedElement> weightedVariables;     
+        if( problem.getCustomers().isEmpty()){
             return -1;
         }
-        weightedVariables = new ArrayList(problem.getSequenceA().size());        
-        for (int i = 0; i < problem.getSequenceA().size(); i++) {        
+        weightedVariables = new ArrayList(problem.getCustomers().size());
+        //weightedVariables = new ArrayList(problem.getSequenceA().size());        
+        
+        for (int i = 0; i < problem.getCustomers().size(); i++) {        
             //expression.set("x", Math.abs(problem.getSequenceA().get(i) - problem.getAbsoluteDifference()));         
-            expression.set("x", new Random().nextDouble());
+            expression.set("x", problem.getCustomers().get(i).getTimeWindowStart());
             weightedVariables.add(new WeightedElement(i, expression.evaluate()));
         }
         //System.out.println(weightedVariables);
@@ -43,7 +45,10 @@ public class FunctionBasedHeuristic extends VRPHeuristic {
          * Selects the next variable according to the given criterion.
          */        
         Collections.sort(weightedVariables, Collections.reverseOrder());
-        return problem.getSequenceA().remove(weightedVariables.get(0).getId());        
+        System.out.println("Customer - " + weightedVariables.get(0).getId());
+        return problem.getCustomers().remove(weightedVariables.get(0).getId()).getNumber();
+        
+//        return problem.getSequenceA().remove(weightedVariables.get(0).getId());        
     }
     
     @Override

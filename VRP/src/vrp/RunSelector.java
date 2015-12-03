@@ -56,7 +56,7 @@ public class RunSelector {
          * Test the four available methods on a set of randomly generated instances.
         */
         
-                    List<String> results = new ArrayList<>();
+        List<String> results = new ArrayList<>();
             try {
                 Files.walk(Paths.get("Instances/solomon_100")).forEach(filePath -> {
                     if (Files.isRegularFile(filePath)) {
@@ -71,14 +71,11 @@ public class RunSelector {
             }
         
         Solution_Tester tester = new Solution_Tester();
-        int nbInstances, maxValue;
-        Random random;        
+        
         VehicleRoutingProblem[] problems; 
         StringBuilder string;
-        nbInstances = 56;
-        maxValue = 10;
         problems = new VehicleRoutingProblem[results.size()]; 
-        random = new Random(12345); // The seed for the generation of the random instances to test the performance.
+        
         Heuristic_NNH nearestN =  new Heuristic_NNH();
         Heuristic_I1 i1 = new Heuristic_I1();
         //System.out.println("2OPT, REL, SELECTOR");
@@ -167,12 +164,8 @@ public class RunSelector {
                 Logger.getLogger(VRP.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            
-            Random random;
             problems = new VehicleRoutingProblem[results.size()];
-           // problems = new VehicleRoutingProblem[26];
-            random = new Random(seed);
-            ///for (int i = 0; i < 26; i ++) {
+           
              for (int i = 0; i < results.size(); i ++) {
                 problems[i] = new VehicleRoutingProblem("Instances/solomon_100T/" +   results.get(i));
                  Heuristic_NNH nearestN =  new Heuristic_NNH();

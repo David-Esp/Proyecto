@@ -74,12 +74,12 @@ public class TestGenerator {
            // problems[i] = new MinDifferenceProblem(100, maxValue, random.nextLong());
             problems[i] = new VehicleRoutingProblem("Instances/solomon_100/" +   results.get(i));
             string = new StringBuilder(); 
-            string.append(problems[i].solve(selector)).append(", ");
-            string.append(problems[i].solve(new FunctionBasedHeuristic(" x ")));
+           // string.append(problems[i].solve(selector)).append(", ");
+            string.append(problems[i].solve(new FunctionBasedHeuristic("demand")));
             System.out.println(string.toString().trim());
         }
         
-        System.out.println(generateHeuristic(501434)); // The seed for replication of the evolutionary process.
+       System.out.println(generateHeuristic(501434)); // The seed for replication of the evolutionary process.
         
         
         
@@ -92,7 +92,7 @@ public class TestGenerator {
         EvaluationFunction evaluationFunction;        
         random = new Random(seed);
         VectorIndividual.setRandomNumberGenerator(random.nextLong());             
-        componentNames = new String[]{"x"};
+        componentNames = new String[]{"demand", "twStart"};
         evaluationFunction = new EvaluatorGen();
         selectionOperator = new TournamentSelectionOperator(2, true, random.nextLong());          
         return ((ComponentIndividual) ComponentHeuristicGenerationFramework.run(componentNames, 10, 50, 1.0, 0.1, selectionOperator, evaluationFunction, GeneticAlgorithmType.STEADY_STATE, true, random.nextLong())).getExpression().toString();        

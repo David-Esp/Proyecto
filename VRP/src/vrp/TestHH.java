@@ -16,6 +16,7 @@ import vrp.Problem.Route;
 import vrp.Problem.VehicleRoutingProblem;
 import vrp.Solvers.Problem_Analizer;
 import vrp.Solvers.Solution_Tester;
+import vrp.heuristics.FunctionBasedHeuristic;
 import vrp.heuristics.Heuristic_2OPT;
 import vrp.heuristics.Heuristic_I1;
 import vrp.heuristics.Heuristic_NNH;
@@ -57,14 +58,17 @@ public class TestHH {
         Heuristic_I1 i1 = new Heuristic_I1(); 
         Problem_Analizer pAnal = new Problem_Analizer();
         VehicleRoutingProblem problem;
-        problem = new VehicleRoutingProblem("Instances/solomon_100/RC101.txt"); 
-         while (i1.getNextElement(problem) == 1){}
+        problem = new VehicleRoutingProblem("Instances/solomon_100/RC101.txt");
+        
+          
+        // while (i1.getNextElement(problem) == 1){}
             string = new StringBuilder();
           //  double some = CalculateD
         
         
-       
-        
+       string.append(problem.solve(new FunctionBasedHeuristic("*(*(-(+(twStart, twStart), *(demand, twStart)), /(/(demand, 0.5389030816442785), /(twStart, demand))), *(+(*(0.9306884313352309, twStart), max(0.5910493812944929, twStart)), /(*(twStart, 0.19599067514210988), +(0.12488346976002718, twStart))))")));
+        System.out.println(string.toString().trim());   
+        /*
           System.out.println("GAP = " +  CalculateDistance(problem)    + " VEH = " 
                 + (double) problem.getRoutes().size()/25 + " Rules = " + getSomething(problem)  + " BigEdges = " + getBigEdges(problem)   );      
              System.out.println(string.toString().trim());
@@ -100,7 +104,7 @@ public class TestHH {
                 + (double) problem.getRoutes().size()/25 + " Rules = " + getSomething(problem)  + " BigEdges = " + getBigEdges(problem)   );      
              System.out.println(string.toString().trim()); 
  
-            
+ */           
 
             if (tester.solution(problem)) {
               System.out.println( problem.toString() );

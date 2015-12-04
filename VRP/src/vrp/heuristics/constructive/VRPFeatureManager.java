@@ -1,7 +1,9 @@
 package vrp.heuristics.constructive;
 
+import java.util.List;
+import vrp.Problem.Customer;
+import vrp.Problem.Route;
 import vrp.Problem.VehicleRoutingProblem;
-import vrp.heuristics.Utils.Statistical;
 
 /**
  * Provides the methods to estimate features to characterize VRP instances and their variables.
@@ -49,6 +51,27 @@ public class VRPFeatureManager {
         return timeWindowStart; 
     }
     
-     
+    public double getClosenessToLast(VehicleRoutingProblem problem, int index){
+        List<Route> routes = problem.getRoutes();
+        List<Customer> customers = problem.getCustomers();
+        Customer candidateCustomer = customers.get(index);
+        Customer depot = problem.getDepot();
         
+        if(routes.isEmpty()){
+            
+        }
+        return 0;
+        
+    }
+     
+       
+        private double getDistanceFromTo(Customer customerOrigin, Customer customerDestiny) {
+
+        double xCoord = Math.abs(customerDestiny.getxCoord() - customerOrigin.getxCoord());
+        double yCoord = Math.abs(customerDestiny.getyCoord() - customerOrigin.getyCoord());
+        double distance = Math.sqrt((xCoord * xCoord) + (yCoord * yCoord));
+
+        return distance;
+
+    }
 }

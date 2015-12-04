@@ -66,8 +66,10 @@ public class TestHH {
           //  double some = CalculateD
         
         
-       string.append(problem.solve(new FunctionBasedHeuristic("*(*(-(+(twStart, twStart), *(demand, twStart)), /(/(demand, 0.5389030816442785), /(twStart, demand))), *(+(*(0.9306884313352309, twStart), max(0.5910493812944929, twStart)), /(*(twStart, 0.19599067514210988), +(0.12488346976002718, twStart))))")));
-        System.out.println(string.toString().trim());   
+       string.append(problem.solve(new FunctionBasedHeuristic("*(*(-(+(twStart, close), *(demand, demand)), /(/(twStart, twEnd), min(0.04140779399910954, twStart))), *(+(*(0.9306884313352309, twEnd), max(twStart, 0.5465762712442825)), /(*(twStart, close), max(demand, demand))))")));
+       
+       
+       System.out.println(string.toString().trim());   
         /*
           System.out.println("GAP = " +  CalculateDistance(problem)    + " VEH = " 
                 + (double) problem.getRoutes().size()/25 + " Rules = " + getSomething(problem)  + " BigEdges = " + getBigEdges(problem)   );      

@@ -1,12 +1,11 @@
 package vrp.heuristics;
 
-import RaHHD.FeatureManager;
+import vrp.heuristics.Utils.WeightedElement;
 import vrp.heuristics.Utils.Expression;
 import vrp.Problem.VehicleRoutingProblem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import vrp.Problem.Customer;
 import vrp.Problem.Edge;
 import vrp.Problem.Route;
@@ -36,11 +35,11 @@ public class FunctionBasedHeuristic extends VRPHeuristic {
     @Override
     public int getNextElement(VehicleRoutingProblem problem) {
         List<WeightedElement> weightedVariables;
-        VRPFeatureManager featureManager = new VRPFeatureManager(problem);
         if (problem.getCustomers().isEmpty()) {
             return -1;
         }
-      
+        VRPFeatureManager featureManager = new VRPFeatureManager(problem);
+        
         weightedVariables = new ArrayList(problem.getCustomers().size());
         //weightedVariables = new ArrayList(problem.getSequenceA().size());        
 
@@ -49,7 +48,7 @@ public class FunctionBasedHeuristic extends VRPHeuristic {
             expression.set("twStart", problem.getCustomers().get(i).getTimeWindowStart());
             expression.set("demand", problem.getCustomers().get(i).getDemand());
             expression.set("twEnd", problem.getCustomers().get(i).getTimeWindowEnd());
-            expression.set("something", featureManager.getClosenessToLast(problem,i));
+            expression.set("close", featureManager.getClosenessToLast(problem, i));  
             weightedVariables.add(new WeightedElement(i, expression.evaluate()));
         }
         //System.out.println(weightedVariables);

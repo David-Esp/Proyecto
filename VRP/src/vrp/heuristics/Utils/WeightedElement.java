@@ -1,4 +1,4 @@
-package vrp.heuristics;
+package vrp.heuristics.Utils;
 
 /**
  * Provides the methods to create and use weighted elements (pairs of identifiers and a double

@@ -20,8 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import vrp.Problem.VehicleRoutingProblem;
 import vrp.heuristics.FunctionBasedHeuristic;
-import vrp.heuristics.Heuristic_I1;
-import vrp.heuristics.Heuristic_NNH;
 
 /**
  * Tests the functionality of the minimum difference problem (a toy problem) and the RaHHD
@@ -92,7 +90,7 @@ public class TestGenerator {
         EvaluationFunction evaluationFunction;        
         random = new Random(seed);
         VectorIndividual.setRandomNumberGenerator(random.nextLong());             
-        componentNames = new String[]{"demand", "twStart"};
+        componentNames = new String[]{"demand", "twStart", "twEnd", "close"};
         evaluationFunction = new EvaluatorGen();
         selectionOperator = new TournamentSelectionOperator(2, true, random.nextLong());          
         return ((ComponentIndividual) ComponentHeuristicGenerationFramework.run(componentNames, 10, 50, 1.0, 0.1, selectionOperator, evaluationFunction, GeneticAlgorithmType.STEADY_STATE, true, random.nextLong())).getExpression().toString();        
